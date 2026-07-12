@@ -1,0 +1,29 @@
+# Data and model weights are symlinks into shared read-only stores
+# (../../hcp_data, ../../moe_models). Never version them.
+data
+models
+
+# Pipeline outputs: regenerable by running run_full_pipeline.py
+results/
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# LaTeX build artifacts (the .tex, .cls, .bib, figures and the compiled PDF
+# are tracked; the intermediate files are not)
+*.aux
+*.log
+*.blg
+*.fls
+*.fdb_latexmk
+*.out
+*.run.xml
+*.bcf
+*.synctex.gz
+
+# OS
+.DS_Store

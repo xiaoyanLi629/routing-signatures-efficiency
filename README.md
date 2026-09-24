@@ -1,74 +1,207 @@
+<div align="center">
+
 # Routing-Level Signatures of Cognitive Efficiency
 
-**Only Inter-Subject Routing Consistency Survives FDR, with a Pairwise-Correlation Caveat**
+### Only inter-subject routing consistency survives FDR — with a pairwise-correlation caveat
 
-投稿：**IEEE BIBM 2026**（regular paper B325）· 已录用 · camera-ready 在 `camera-ready` 分支
+**Xiaoyan Li · Cuicui Jiang · Jiaoping Chen · Yujia Du · Jiaxuan Wei · Xingyue Liu · Rumei Yang**
+
+*IEEE International Conference on Bioinformatics and Biomedicine (BIBM 2026), regular paper*
+
+[![Conference](https://img.shields.io/badge/IEEE%20BIBM-2026-00629B)](https://www3.cs.stonybrook.edu/~bibm2026/)
+[![Data](https://img.shields.io/badge/data-HCP%20Young%20Adult-6f42c1)](https://www.humanconnectome.org/study/hcp-young-adult)
+[![Python](https://img.shields.io/badge/python-3.10-3776AB?logo=python&logoColor=white)](requirements.txt)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
+<img src="assets/naive_vs_honest.gif" width="760" alt="Permutation null building up next to the far narrower null assumed by the naive pairwise t-test">
+
+<sub>Same data, two tests. The grey histogram is the label-permutation null for the group difference in routing consistency; the red curve is the null implicitly assumed when all 2,450 within-group pairwise correlations are pooled into a t-test. The observed difference (dashed) sits at p = 0.018 under the first and p = 10<sup>−30</sup> under the second.</sub>
+
+</div>
 
 ---
 
-## 论点
+## TL;DR
 
-高效认知是否对应某个可测量的皮层信息路由签名？具体地说，它是否 **(i) 更稀疏**、**(ii) 更符合任务典型的网络选择**、**(iii) 跨被试更一致**、还是 **(iv) 更模块化**？
+Do people who solve cognitive tasks efficiently route information through cortex differently? We tested four pre-specified candidate signatures jointly, in one sample of **100 HCP participants across all seven task-fMRI paradigms**, with a behavior-defined efficiency label and Benjamini–Hochberg FDR control.
 
-本文在 100 名 HCP 被试、7 个任务 fMRI 范式上联合检验这四个预先设定的候选属性。camera-ready 版的结论是：经 BH-FDR 校正后，**只有被试间路由一致性（H3）通过**（被试级 LOO Welch *d* = +0.52，*p* = 0.011，*p*<sub>FDR</sub> = 0.033；置换 *p* = 0.018；与连续效率分数 *r* = 0.36），稀疏度、典型网络选择和模块度都不支持。
+- ✅ **Inter-subject routing consistency** — high-efficiency participants route task information across networks more like one another (*d* = +0.52, *p*<sub>FDR</sub> = 0.033), confirmed by permutation, rank, continuous-score and Bayesian analyses.
+- ❌ **Activation sparsity**, ❌ **canonical task-network engagement**, ❌ **modularity** — not supported.
+- ⚠️ **The pairwise-correlation trap** — the test most practitioners reach for reports *p* = 1.0 × 10<sup>−30</sup> on the same consistency data, overstating significance by **~28 orders of magnitude**. A subject-level leave-one-out statistic fixes it in three lines.
+- 🤖 **Cortex vs. Mixture-of-Experts** — cortex is ~3.3× more concentrated than MoE expert use *pooled over layers*, but single MoE layers can be more concentrated than cortex: "which is sparser" depends on the level of pooling.
 
-方法学上的警示仍然成立：同一批一致性数据，传统的 pairwise-correlation *t* 检验给出 *p* = 1.0×10<sup>−30</sup>，比被试级统计量夸大约 28 个数量级。
+## Key results
 
-投稿版曾报告“四项全为 null”，那是在一个有误的一级 GLM 上得到的（见下文“camera-ready 修正”）。
+| | Candidate signature | Primary outcome (one value per participant) | Effect *d* [95% CI] | *p* | *p*<sub>FDR</sub> | BF<sub>10</sub> | Verdict |
+|:-:|---|---|:-:|:-:|:-:|:-:|:-:|
+| H1 | Sparser activation | composite sparsity | −0.26 [−0.66, +0.13] | 0.19 | 0.29 | 0.45 | ❌ |
+| H2 | Task-selective networks | entropy selectivity (Yeo-7) | +0.14 [−0.26, +0.53] | 0.50 | 0.50 | 0.26 | ❌ |
+| **H3** | **Consistent routing** | **subject-level LOO correlation** | **+0.52 [+0.12, +0.92]** | **0.011** | **0.033** | **4.0** | ✅ |
+| H4 | More modular | Newman's *Q* (Louvain) | +0.19 [−0.20, +0.59] | 0.34 | 0.34 | 0.32 | ❌ |
 
-## 数据
+H3 also holds under label permutation (*p* = 0.018), Mann–Whitney (*p* = 0.013), with head motion as a covariate (*p* = 0.013), and as a correlation with the continuous efficiency score (*r* = 0.36, *p* = 0.0002). All numbers are in [`results/summary/camera_ready_analyses.json`](results/summary/camera_ready_analyses.json).
 
-HCP Young Adult，100 个被试（一份按 ID 升序排列、7 个任务 LR/RL 齐全的名单中的前 100 人），7 个任务 fMRI 范式。原始数据原先通过 `data -> ../../hcp_data` 链接到共享目录，该目录已于 2026-09-24 删除；现在 `data/` 只保留 `_atlas/` 图谱文件（Glasser-360、Cole-Anticevic、MNI 体积图谱），重跑一级 GLM 前需要先用 `tools/download_hcp.py` 重新下载 HCP 数据。组级与被试级中间结果都在 `results/`，不依赖原始数据。使用的是 MSMAll 最小预处理数据（未做 ICA-FIX），入组时没有做头动筛选（事后核查：所有 run 的平均相对位移都小于 0.5 mm）。
+## The pairwise-correlation caveat
 
-- HCP-MMP1.0 Glasser-360 分区（Cole-Anticevic CIFTI labels）
-- Cole-Anticevic 12 网络划分，收敛为 7 个 Yeo-like 网络（VIS, SMN, DAN, VAN, LIM, FPN, DMN）
-- 任务对比按 HCP 标准：WM 2-back vs 0-back；MOTOR 五种运动 vs 固视；LANGUAGE story vs math；SOCIAL mental vs rnd；RELATIONAL relation vs match；EMOTION fear faces vs shapes；GAMBLING win vs loss
+"Do efficient participants route more similarly?" invites a natural analysis: correlate every pair of participants within a group and *t*-test the two sets of correlations. Each participant then appears in *n* − 1 pairs, so 100 people become 2,450 "observations".
 
-跨域对比用三个 MoE 模型（Switch-base-8 / Qwen1.5-MoE-A2.7B / DeepSeek-MoE-16B）。MoE 路由数据取自清华学报姊妹项目修正过 router hook 之后的结果（`../../TST_Journal_2026/Routing_MoE_TST/results/run_20260419_182908/moe_analysis/`）。按层合并时皮层比 MoE 集中约 3.3 倍，但 MoE 单层可以比皮层更集中。
+<table>
+<tr>
+<td width="50%">
 
-## camera-ready 修正（2026-09-24）
+**Naive (don't)**
 
-- **一级 GLM**（`scripts/s01b_glm_fixed.py`）：原 `s01` 把 EVs 目录下所有 `.txt` 都当回归量（包括 Sync 和与组块重叠的事件 EV，WM 的设计矩阵秩亏），按子串匹配 EV 名，HRF 下冲项分母写错，MOTOR 对比 cue。修正版只用组块 EV、精确匹配、SPM HRF、128 s 高通，MOTOR 对固视。结果在 `results/run_20260924_glmfix/`；原 `results/run_20260419_182908/` 保持不动。
-- **H1** 改为被试级检验（原来把 700 个被试×任务值当独立观测）。
-- **MoE** 数字改用修正后的 router 抽取；原 H7 的 r=+0.25（截断展平矩阵逐元素相关）改为 Mantel 检验。
-- **审稿人要求的补充分析**：`scripts/s08_camera_ready_analyses.py`；新图：`scripts/s09_camera_ready_figures.py`；一键重跑：`scripts/run_glmfix.sh`。
-- 投稿用源文件包：`papers/conference_BIBM2026/B325_camera_ready_source.tar.gz`（未纳入 git）。
-
-## 分析管线
-
-```bash
-python run_full_pipeline.py           # 全部 7 个 stage
-python run_full_pipeline.py --list    # 查看 stage 列表
+```python
+pairs_hi = [corr(x[i], x[j]) for i, j in combinations(high, 2)]
+pairs_lo = [corr(x[i], x[j]) for i, j in combinations(low, 2)]
+ttest_ind(pairs_hi, pairs_lo)      # p = 1.0e-30
 ```
 
-| Stage | 脚本 | 内容 |
-|---|---|---|
-| 1 | `s01_multi_task_extraction.py` | 从 7 个 HCP 任务提取激活模式 |
-| 2 | `s02_sparsity_analysis.py` | H1：激活稀疏性 |
-| 3 | `s03_routing_patterns.py` | H2/H3：任务-网络路由模式 |
-| 4 | `s03b_h3_robust.py` | **H3 的 independence-safe 重检验**（LOO-r + label permutation）—— 16 个数量级差距就出自这里 |
-| 5 | `s04_functional_modularity.py` | H4：Louvain 社区检测与模块化 |
-| 6 | `s06b_hypothesis_fdr.py` | **跨 H1/H3/H4 的全局 BH-FDR 校正** |
-| 7 | `s07_advanced_visualization.py` | 出版级图表 |
+</td>
+<td width="50%">
 
-## 自动重跑
+**Subject-level (do)**
 
-`tools/auto_rerun.sh` 会重跑脑侧分析、用 `tools/update_manuscript_numbers.py` 更新 `papers/conference_BIBM2026/BIBM2026_paper.tex` 里的正文数字，并重新编译。
+```python
+loo = {i: corr(x[i], mean(x[g[i] - {i}])) for i in subjects}
+ttest_ind([loo[i] for i in high],
+          [loo[i] for i in low], equal_var=False)   # p = 0.011
+```
 
-## 稿件
+</td>
+</tr>
+</table>
 
-`papers/conference_BIBM2026/`
+Back it with a label-permutation test ([`scripts/s03b_h3_robust.py`](scripts/s03b_h3_robust.py)), which needs no independence assumption at all. On an earlier, flawed first-level model the naive test was just as confident (*p* = 10<sup>−17</sup>) while subject-level inference sat at *p* ≈ 0.05 — the naive test reports an overwhelming effect whether or not one is there.
 
-- `BIBM2026_paper.tex` / `.pdf` — 当前版本
-- `BIBM2026_paper.tex.bak` — 论点转向前的早期版本（标题为 *Inter-Subject Routing Consistency, Not Activation Sparsity, Distinguishes…*），差 193 行，保留作为思路演进记录
-- `REPOSITION_DRAFT.md` — 改版思路
-- `papers/figures_source/figures.pptx` — 正文 `Picture*.pdf` 的示意图源文件（承自最初被拒的 CogSci 版）
+<p align="center"><img src="assets/fig_null_distributions.png" width="460" alt="Naive, LOO and permutation null distributions on one axis"></p>
 
-## 沿革
+## Task maps
 
-最初有一个 CogSci 2026 版本，主张存在一个**正向**的"高效大脑路由签名"。该版被拒后，同一批数据经 BH-FDR 校正重新审视，结论反转，才有了现在这篇 null-result 报告。CogSci 版稿件已删除。
+<p align="center"><img src="assets/task_brains.gif" width="720" alt="Group-mean activation for each of the seven HCP tasks"></p>
 
-## 与另一个项目的关系
+Group-mean task-evoked activation (*N* = 100) on the HCP-MMP1.0 atlas. Parcel-level maps show the expected anatomy — frontoparietal cortex for working memory and relational reasoning, somatomotor cortex for movement, ventral visual cortex for faces — yet the most engaged *network* matches the canonical prediction in only 2 of 7 tasks, at both the Yeo-7 and the native 12-network resolution.
 
-同一批 HCP 数据还支撑着另一篇独立的论文——`../../TST_Journal_2026/Routing_MoE_TST/`（清华学报 TST，
-大脑 vs MoE 基础模型的跨域路由对比）。两个项目**代码、结果、稿件完全独立**，原先共享 `../../hcp_data/` 与 `../../moe_models/`，两者已于 2026-09-24 删除。
+## Cortex vs. Mixture-of-Experts routing
+
+<table>
+<tr>
+<td width="55%"><img src="assets/fig_cross_domain.png" alt="Cortical Gini at matched unit counts vs MoE Gini"></td>
+<td>
+
+Three open-weight MoE language models (Switch-base-8, Qwen1.5-MoE-A2.7B, DeepSeek-MoE-16B) were run on 318 text sequences in seven categories paired with the seven fMRI tasks.
+
+- **Pooled over layers**, expert use is near-uniform (Gini 0.04–0.25) and category-blind.
+- **Cortex** is ~0.44 whether computed on all 360 parcels or on *k* = 8/60/64 random parcels, so the gap is not a unit-count artifact.
+- **Single layers** are far more concentrated (DeepSeek mean 0.76) because layers favor different experts and cancel when pooled.
+- Brain task-similarity and MoE category-similarity structure do not match (Mantel *p* ≥ 0.77).
+
+</td>
+</tr>
+</table>
+
+## Pipeline
+
+```mermaid
+flowchart LR
+    A["HCP-YA task fMRI<br/>100 subjects × 7 tasks × LR/RL"] --> B["s01b · parcel time series<br/>block GLM, SPM HRF<br/>HCP-MMP1.0 (360)"]
+    W["WM_Stats.csv"] --> E["behavioral efficiency<br/>Acc / RT, median split"]
+    B --> C["100 × 7 × 360<br/>activation array"]
+    C --> H1["H1 · sparsity<br/>s02"]
+    C --> H2["H2 · task selectivity<br/>s03"]
+    C --> H3["H3 · routing consistency<br/>s03 + s03b (LOO, permutation)"]
+    C --> H4["H4 · modularity<br/>s04 (Louvain)"]
+    E --> H1 & H2 & H3 & H4
+    H1 & H3 & H4 --> F["BH-FDR · s06b<br/>reviewer analyses · s08"]
+    H2 --> F
+    M["MoE router outputs<br/>Switch · Qwen · DeepSeek"] --> X["cross-domain · s08 / s09"]
+    C --> X
+```
+
+## Reproducing the results
+
+**1. Environment**
+
+```bash
+conda create -n routing python=3.10 -y && conda activate routing
+pip install -r requirements.txt
+```
+
+**2. Data.** HCP Young Adult data are distributed by the Human Connectome Project under its [Open Access Data Use Terms](https://www.humanconnectome.org/study/hcp-young-adult/document/wu-minn-hcp-consortium-open-access-data-use-terms) and are not redistributed here. With HCP/BALSA credentials:
+
+```bash
+export BALSA_USERNAME=...  BALSA_PASSWORD=...        # or HCP_AWS_KEY / HCP_AWS_SECRET
+python tools/download_hcp.py --n-subjects 100 --output data/   # task fMRI, EVs, motion
+python tools/download_atlas.py                                  # Glasser-360, Cole-Anticevic, MNI atlas
+```
+
+**3. Run** (about 15 min with 8 worker processes once the ~180 GB of CIFTI is on a local disk):
+
+```bash
+HCP_DATA_ROOT=data PYTHON=python scripts/run_glmfix.sh
+```
+
+This writes `results/run_20260924_glmfix/`, including `camera_ready/camera_ready_analyses.json`, which should match [`results/summary/`](results/summary/). The MoE side uses the router outputs shipped in [`results/moe_corrected/`](results/moe_corrected/); re-extracting them requires the model weights (`download_models.py`) and `scripts/s05b_multi_moe_analysis.py`.
+
+**4. Figures and README assets**
+
+```bash
+export CR_RUN=run_20260924_glmfix
+python tools/build_vertical_glassbrain.py      # task maps
+python tools/make_readme_assets.py             # GIFs and PNGs in assets/
+```
+
+## Repository layout
+
+```
+configs/config.py              paths, tasks, networks, atlas files
+scripts/
+  s01b_glm_fixed.py            first-level GLM (block EVs, SPM HRF, HCP contrasts)
+  s02_sparsity_analysis.py     H1
+  s03_routing_patterns.py      H2, routing profiles
+  s03b_h3_robust.py            H3: subject-level LOO, permutation, naive reference
+  s04_functional_modularity.py H4: Louvain, Q, segregation, participation
+  s05b_multi_moe_analysis.py   MoE router extraction
+  s06b_hypothesis_fdr.py       BH-FDR across primary hypotheses
+  s08_camera_ready_analyses.py reviewer analyses (CIs, TOST, Bayes factors, 12-network H2,
+                               continuous scores, Louvain stability, matched-n Gini, Mantel)
+  s09_camera_ready_figures.py  null-distribution and cross-domain figures
+  run_glmfix.sh                end-to-end run
+tools/                         data download, behavioral scores, figures
+results/summary/               group-level results reported in the paper (no subject-level data)
+results/moe_corrected/         MoE routing counts from the corrected router extraction
+assets/                        figures and animations used in this README
+```
+
+## Corrections relative to the submitted manuscript
+
+The camera-ready version corrects several problems found while addressing the reviews; we list them so that anyone comparing versions knows why the numbers differ.
+
+- **First-level GLM.** The submitted model loaded every EV file (including event-level regressors overlapping the task blocks, which made the WM design rank-deficient), matched EVs by name substring, used an HRF with a mis-scaled undershoot, and contrasted MOTOR against the cue. `s01b_glm_fixed.py` replaces it. With the corrected model H3 moves from borderline (*p*<sub>FDR</sub> = 0.073) to significant (*p*<sub>FDR</sub> = 0.033).
+- **H1 independence.** H1 is now tested on one value per participant rather than 700 pooled subject × task values.
+- **MoE router extraction.** A forward hook also matched non-router `gate` modules; all MoE numbers come from the corrected extractor.
+- **Cross-domain similarity.** An element-wise correlation of matrices with arbitrary expert ordering was replaced by a permutation-invariant Mantel test.
+
+The original first-level model is kept as `scripts/s01_multi_task_extraction.py` for comparison.
+
+## Citation
+
+```bibtex
+@inproceedings{li2026routing,
+  title     = {Routing-Level Signatures of Cognitive Efficiency: Only Inter-Subject Routing
+               Consistency Survives {FDR}, with a Pairwise-Correlation Caveat},
+  author    = {Li, Xiaoyan and Jiang, Cuicui and Chen, Jiaoping and Du, Yujia and
+               Wei, Jiaxuan and Liu, Xingyue and Yang, Rumei},
+  booktitle = {Proceedings of the IEEE International Conference on Bioinformatics and
+               Biomedicine (BIBM)},
+  year      = {2026}
+}
+```
+
+## Acknowledgments
+
+Data were provided by the Human Connectome Project, WU-Minn Consortium (Principal Investigators: David Van Essen and Kamil Ugurbil; 1U54MH091657) funded by the 16 NIH Institutes and Centers that support the NIH Blueprint for Neuroscience Research, and by the McDonnell Center for Systems Neuroscience at Washington University. Parcellation: HCP-MMP1.0 (Glasser et al., 2016) and the Cole-Anticevic network partition (Ji et al., 2019).
+
+Corresponding author: Rumei Yang · rumeiyang@njmu.edu.cn
+
+Code is released under the [MIT License](LICENSE).

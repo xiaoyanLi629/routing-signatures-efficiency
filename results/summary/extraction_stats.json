@@ -1,0 +1,111 @@
+{
+  "glm": "block EVs only, exact names, SPM double-gamma HRF, DCT 128 s high-pass",
+  "design": {
+    "WM": {
+      "evs": [
+        "2bk_body",
+        "2bk_faces",
+        "2bk_places",
+        "2bk_tools",
+        "0bk_body",
+        "0bk_faces",
+        "0bk_places",
+        "0bk_tools"
+      ],
+      "pos": [
+        "2bk_body",
+        "2bk_faces",
+        "2bk_places",
+        "2bk_tools"
+      ],
+      "neg": [
+        "0bk_body",
+        "0bk_faces",
+        "0bk_places",
+        "0bk_tools"
+      ]
+    },
+    "MOTOR": {
+      "evs": [
+        "cue",
+        "lf",
+        "lh",
+        "rf",
+        "rh",
+        "t"
+      ],
+      "pos": [
+        "lf",
+        "lh",
+        "rf",
+        "rh",
+        "t"
+      ],
+      "neg": []
+    },
+    "LANGUAGE": {
+      "evs": [
+        "story",
+        "math"
+      ],
+      "pos": [
+        "story"
+      ],
+      "neg": [
+        "math"
+      ]
+    },
+    "SOCIAL": {
+      "evs": [
+        "mental",
+        "rnd"
+      ],
+      "pos": [
+        "mental"
+      ],
+      "neg": [
+        "rnd"
+      ]
+    },
+    "RELATIONAL": {
+      "evs": [
+        "relation",
+        "match"
+      ],
+      "pos": [
+        "relation"
+      ],
+      "neg": [
+        "match"
+      ]
+    },
+    "EMOTION": {
+      "evs": [
+        "fear",
+        "neut"
+      ],
+      "pos": [
+        "fear"
+      ],
+      "neg": [
+        "neut"
+      ]
+    },
+    "GAMBLING": {
+      "evs": [
+        "win",
+        "loss"
+      ],
+      "pos": [
+        "win"
+      ],
+      "neg": [
+        "loss"
+      ]
+    }
+  },
+  "n_nan_cells": 0,
+  "successful_extractions": 700,
+  "design_condition_number_median": 1.092885919287256,
+  "design_condition_number_max": 1.6782573352273167
+}

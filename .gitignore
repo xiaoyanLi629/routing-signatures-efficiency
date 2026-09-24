@@ -1,17 +1,13 @@
-# Data and model weights are symlinks into shared read-only stores
-# (../../hcp_data, ../../moe_models). Never version them.
-data
-models
-
-# Pipeline outputs: regenerable by running run_full_pipeline.py
-results/
+# HCP data and model weights are never versioned
+data/
+models/
+# Pipeline outputs (the paper's group-level numbers live in results/summary/)
+results/run_*/
 logs/
-
-# Python
 __pycache__/
 *.py[cod]
 .venv/
-venv/
+.DS_Store
 
 # LaTeX build artifacts (the .tex, .cls, .bib, figures and the compiled PDF
 # are tracked; the intermediate files are not)
@@ -24,7 +20,4 @@ venv/
 *.run.xml
 *.bcf
 *.synctex.gz
-
-# OS
-.DS_Store
 papers/conference_BIBM2026/*.tar.gz

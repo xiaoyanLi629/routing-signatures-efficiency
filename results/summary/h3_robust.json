@@ -1,0 +1,36 @@
+{
+  "n_high": 50,
+  "n_low": 50,
+  "loo_r_test": {
+    "description": "Subject-level leave-one-out r vs group-mean, Welch t-test on independent observations",
+    "high_mean_r": 0.6797025321929229,
+    "low_mean_r": 0.6263998240259402,
+    "mean_diff": 0.05330270816698268,
+    "ci95_bootstrap": [
+      0.01385191511729279,
+      0.09229411023197298
+    ],
+    "welch_t": 2.5932686675452072,
+    "welch_p": 0.011017557347578246,
+    "mannwhitney_u": 1611.0,
+    "mannwhitney_p": 0.012947064280131263,
+    "cohens_d": 0.5186537335090414
+  },
+  "label_permutation_test": {
+    "description": "Two-sided permutation on efficiency labels, statistic = within-group mean pairwise r difference",
+    "observed_diff": 0.06850966774800049,
+    "n_perm": 10000,
+    "p_value": 0.017998200179982,
+    "null_mean": -0.0002473063543901655,
+    "null_std": 0.029096985769168013
+  },
+  "naive_reference": {
+    "description": "Original s03 pairwise-r t-test (treats ~2450 pairs as independent; reported for comparison only)",
+    "t": 11.67962676747533,
+    "p": 1.0403052405701228e-30,
+    "cohens_d": 0.4719281879434127,
+    "n_pairs_high": 1225,
+    "n_pairs_low": 1225
+  },
+  "notes": "LOO-r and label permutation both respect subject-level independence. If LOO-r p and permutation p both < 0.05, H3 is supported under a statistically valid framework. If either exceeds 0.05, the original H3 finding (t=2.78, p=0.0055) is an artifact of inflated N from non-independent pairwise observations."
+}

@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the paper below."
+title: "Routing-Level Signatures of Cognitive Efficiency (analysis code)"
+authors:
+  - family-names: Li
+    given-names: Xiaoyan
+    orcid: "https://orcid.org/0000-0002-2649-7575"
+    affiliation: "Michigan State University"
+  - family-names: Jiang
+    given-names: Cuicui
+    orcid: "https://orcid.org/0009-0002-6575-3719"
+  - family-names: Chen
+    given-names: Jiaoping
+  - family-names: Du
+    given-names: Yujia
+  - family-names: Wei
+    given-names: Jiaxuan
+  - family-names: Liu
+    given-names: Xingyue
+  - family-names: Yang
+    given-names: Rumei
+    orcid: "https://orcid.org/0000-0001-9971-2507"
+license: MIT
+preferred-citation:
+  type: conference-paper
+  title: "Routing-Level Signatures of Cognitive Efficiency: Only Inter-Subject Routing Consistency Survives FDR, with a Pairwise-Correlation Caveat"
+  authors:
+    - family-names: Li
+      given-names: Xiaoyan
+    - family-names: Jiang
+      given-names: Cuicui
+    - family-names: Chen
+      given-names: Jiaoping
+    - family-names: Du
+      given-names: Yujia
+    - family-names: Wei
+      given-names: Jiaxuan
+    - family-names: Liu
+      given-names: Xingyue
+    - family-names: Yang
+      given-names: Rumei
+  collection-title: "Proceedings of the IEEE International Conference on Bioinformatics and Biomedicine (BIBM)"
+  year: 2026

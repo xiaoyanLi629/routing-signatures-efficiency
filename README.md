@@ -202,6 +202,6 @@ The original first-level model is kept as `scripts/s01_multi_task_extraction.py`
 
 Data were provided by the Human Connectome Project, WU-Minn Consortium (Principal Investigators: David Van Essen and Kamil Ugurbil; 1U54MH091657) funded by the 16 NIH Institutes and Centers that support the NIH Blueprint for Neuroscience Research, and by the McDonnell Center for Systems Neuroscience at Washington University. Parcellation: HCP-MMP1.0 (Glasser et al., 2016) and the Cole-Anticevic network partition (Ji et al., 2019).
 
-Contact: Xiaoyan Li · lixiaoy5@msu.edu
+Corresponding author: Rumei Yang · rumeiyang@njmu.edu.cn
 
 Code is released under the [MIT License](LICENSE).

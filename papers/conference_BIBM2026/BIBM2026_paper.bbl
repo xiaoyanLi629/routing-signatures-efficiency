@@ -147,11 +147,11 @@ M.~F. Glasser, S.~N. Sotiropoulos, J.~A. Wilson, T.~S. Coalson, B.~Fischl,
   preprocessing pipelines for the human connectome project,''
   \emph{NeuroImage}, vol.~80, pp. 105--124, 2013.
 
-\bibitem{salimi2014automatic}
-G.~Salimi-Khorshidi, G.~Douaud, C.~F. Beckmann, M.~F. Glasser, L.~Griffanti,
-  and S.~M. Smith, ``Automatic denoising of functional {MRI} data: Combining
-  independent component analysis and hierarchical fusion of classifiers,''
-  \emph{NeuroImage}, vol.~90, pp. 449--468, 2014.
+\bibitem{robinson2014msm}
+E.~C. Robinson, S.~Jbabdi, M.~F. Glasser, J.~Andersson, G.~C. Burgess, M.~P.
+  Harms, S.~M. Smith, D.~C. Van~Essen, and M.~Jenkinson, ``{MSM}: A new
+  flexible framework for multimodal surface matching,'' \emph{NeuroImage}, vol.
+  100, pp. 414--426, 2014.
 
 \bibitem{glasser2016multi}
 M.~F. Glasser, T.~S. Coalson, E.~C. Robinson, C.~D. Hacker, J.~Harwell,
@@ -171,10 +171,24 @@ B.~T.~T. Yeo, F.~M. Krienen, J.~Sepulcre, M.~R. Sabuncu, D.~Lashkari,
   cerebral cortex estimated by intrinsic functional connectivity,''
   \emph{Journal of Neurophysiology}, vol. 106, no.~3, pp. 1125--1165, 2011.
 
+\bibitem{lakens2017equivalence}
+D.~Lakens, ``Equivalence tests: A practical primer for t tests, correlations,
+  and meta-analyses,'' \emph{Social Psychological and Personality Science},
+  vol.~8, no.~4, pp. 355--362, 2017.
+
+\bibitem{rouder2009bayesian}
+J.~N. Rouder, P.~L. Speckman, D.~Sun, R.~D. Morey, and G.~Iverson, ``Bayesian t
+  tests for accepting and rejecting the null hypothesis,'' \emph{Psychonomic
+  Bulletin \& Review}, vol.~16, no.~2, pp. 225--237, 2009.
+
 \bibitem{blondel2008fast}
 V.~D. Blondel, J.-L. Guillaume, R.~Lambiotte, and E.~Lefebvre, ``Fast unfolding
   of communities in large networks,'' \emph{Journal of Statistical Mechanics:
   Theory and Experiment}, vol. 2008, no.~10, p. P10008, 2008.
+
+\bibitem{guimera2005functional}
+R.~Guimer{\`a} and L.~A.~N. Amaral, ``Functional cartography of complex
+  metabolic networks,'' \emph{Nature}, vol. 433, no. 7028, pp. 895--900, 2005.
 
 \bibitem{bai2023qwen}
 J.~Bai, S.~Bai, Y.~Chu, Z.~Cui, K.~Dang, X.~Deng, Y.~Fan, W.~Ge, Y.~Han,
@@ -206,5 +220,14 @@ R.~Socher, A.~Perelygin, J.~Wu, J.~Chuang, C.~D. Manning, A.~Y. Ng, and
 K.~Cobbe, V.~Kosaraju, M.~Bavarian, M.~Chen, H.~Jun, L.~Kaiser, M.~Plappert,
   J.~Tworek, J.~Hilton, R.~Nakano \emph{et~al.}, ``Training verifiers to solve
   math word problems,'' \emph{arXiv preprint arXiv:2110.14168}, 2021.
+
+\bibitem{mantel1967detection}
+N.~Mantel, ``The detection of disease clustering and a generalized regression
+  approach,'' \emph{Cancer Research}, vol.~27, no.~2, pp. 209--220, 1967.
+
+\bibitem{traag2019louvain}
+V.~A. Traag, L.~Waltman, and N.~J. van Eck, ``From {Louvain} to {Leiden}:
+  guaranteeing well-connected communities,'' \emph{Scientific Reports}, vol.~9,
+  p. 5233, 2019.
 
 \end{thebibliography}

@@ -27,3 +27,4 @@ venv/
 
 # OS
 .DS_Store
+papers/conference_BIBM2026/*.tar.gz

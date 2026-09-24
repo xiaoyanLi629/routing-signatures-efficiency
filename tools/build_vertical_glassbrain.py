@@ -17,6 +17,7 @@ bilateral coverage and avoids cramming four sub-views into a narrow column.
 Output: `results/run_<stamp>/figures/fig_tasks_vertical.{pdf,png}`.
 """
 
+import os
 import sys
 from pathlib import Path
 import pickle
@@ -31,7 +32,7 @@ PROJECT_DIR = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_DIR))
 from configs import config
 
-RUN_DIR = PROJECT_DIR / "results" / "run_20260419_182908"
+RUN_DIR = PROJECT_DIR / "results" / os.environ.get("CR_RUN", "run_20260419_182908")
 OUT_STEM = RUN_DIR / "figures" / "fig_tasks_vertical"
 ATLAS_NII = PROJECT_DIR / "data" / "_atlas" / "glasser360MNI.nii.gz"
 

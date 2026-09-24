@@ -15,240 +15,253 @@
 
 \graphicspath{{figures/}}
 
-\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
-
 \begin{document}
 
-\title{Routing-Level Signatures of Cognitive Efficiency: A Multi-Task fMRI Null with a Pairwise-Correlation Caveat}
+\title{Routing-Level Signatures of Cognitive Efficiency: Only Inter-Subject Routing Consistency Survives FDR, with a Pairwise-Correlation Caveat}
 
+% Author names and order must match the submission exactly (BIBM camera-ready rule).
 \author{
-\IEEEauthorblockN{Anonymous Author(s)}
-\IEEEauthorblockA{Submitted to IEEE BIBM 2026}
+\IEEEauthorblockN{Xiaoyan Li\IEEEauthorrefmark{1},
+Cuicui Jiang\IEEEauthorrefmark{2},
+Jiaoping Chen\IEEEauthorrefmark{3},
+Yujia Du\IEEEauthorrefmark{4},
+Jiaxuan Wei\IEEEauthorrefmark{5},
+Xingyue Liu\IEEEauthorrefmark{5},
+and Rumei Yang\IEEEauthorrefmark{6}}
+\IEEEauthorblockA{\IEEEauthorrefmark{1}Department of Computational Mathematics, Science and Engineering, Michigan State University, East Lansing, MI, USA}
+\IEEEauthorblockA{\IEEEauthorrefmark{2}College of Computer Science, Inner Mongolia University, Hohhot, China}
+\IEEEauthorblockA{\IEEEauthorrefmark{3}Merrick School of Business, University of Baltimore, Baltimore, MD, USA}
+\IEEEauthorblockA{\IEEEauthorrefmark{4}Suzhou MetaCortex Intelligence Technology Co., Ltd., Suzhou, China}
+\IEEEauthorblockA{\IEEEauthorrefmark{5}School of Artificial Intelligence, Taiyuan University of Technology, Jinzhong, China}
+\IEEEauthorblockA{\IEEEauthorrefmark{6}School of Nursing, Nanjing Medical University, Nanjing, China}
+\IEEEauthorblockA{lixiaoy5@msu.edu, jiangcuicui@mail.imu.edu.cn, jchen@ubalt.edu, saroyi@163.com,\\
+2023002323@link.tyut.edu.cn, 2023002320@link.tyut.edu.cn, rumeiyang@njmu.edu.cn\\
+Corresponding author: Xiaoyan Li (lixiaoy5@msu.edu)}
 }
 
 \maketitle
 
 \begin{abstract}
-We jointly test four pre-specified routing-level candidate signatures of cognitive efficiency, namely activation sparsity, canonical task-network engagement, inter-subject routing consistency, and community-level modularity, in 100 HCP Young Adult participants across all seven task-fMRI paradigms. The pipeline uses the HCP-MMP1.0 Glasser-360 parcellation with a Cole-Anticevic collapse to seven Yeo-like networks, task-canonical GLM contrasts, and Louvain community detection. Efficiency groups are defined by an independent behavioral criterion (working-memory accuracy-to-reaction-time ratio) and tests are BH-FDR corrected. \emph{No candidate property crosses FDR.} Sparsity is directionally reversed from the neural-efficiency prediction (composite $d = -0.16$, FDR $p = 0.073$); task-network engagement shows 0/7 canonical matches at the Yeo-7 collapse; routing consistency, under an independence-safe subject-level leave-one-out Welch statistic, shows a borderline trend ($d = +0.40$, $p_{\text{raw}} = 0.049$, FDR $p = 0.073$; permutation $p = 0.055$); modularity is null ($d = -0.05$). The same consistency data yields $p = 1.2 \times 10^{-17}$ under the conventional pairwise-correlation $t$-test, an inflation of approximately 16 orders of magnitude relative to the subject-level statistic. We flag this discrepancy as a cautionary methodological note for individual-differences FC studies. A parallel cross-domain analysis of three Mixture-of-Experts foundation models finds biological cortex approximately $2.5\times$ more aggregate-sparse than artificial expert routing, which is uniformly load-balanced across semantic input categories. We conclude that routing-level biomarker claims of cognitive efficiency should be supported by independent replication and by subject-level or permutation inference before being treated as translation-ready.
+We jointly test four pre-specified routing-level candidate signatures of cognitive efficiency (activation-distribution sparsity, canonical task-network engagement, inter-subject routing consistency, and modularity) in 100 Human Connectome Project Young Adult participants across all seven task-fMRI paradigms, with efficiency groups defined by working-memory behavior and Benjamini--Hochberg (BH) FDR control. Only inter-subject routing consistency survives FDR: under a subject-level leave-one-out (LOO) statistic, high-efficiency participants route more like one another ($d = +0.52$, 95\% CI $[+0.12, +0.92]$, $p = 0.011$, $p_{\text{FDR}} = 0.033$; label permutation $p = 0.018$; $\mathrm{BF}_{10} = 4.0$), and consistency correlates with the continuous efficiency score ($r = 0.36$, $p = 0.0002$). Sparsity ($d = -0.26$), task-network engagement (2/7 canonical matches, at chance) and modularity ($d = +0.19$) are not supported. On the same consistency data, the conventional within-group pairwise-correlation $t$-test reports $p = 1.0 \times 10^{-30}$, overstating significance by about 28 orders of magnitude because it treats 2450 correlated pairs as independent; we show the inflation directly and give a drop-in subject-level replacement. A cross-domain comparison with three Mixture-of-Experts (MoE) language models finds cortex about $3.3\times$ more concentrated than MoE expert use pooled over layers, but single MoE layers can be far more concentrated, so that comparison depends on the level of pooling. Routing consistency is a candidate marker of efficient cognition that now needs independent replication.
 \end{abstract}
 
 \begin{IEEEkeywords}
-neural efficiency, multi-task fMRI, inter-subject routing, pairwise-correlation inference, null result
+neural efficiency, multi-task fMRI, inter-subject routing consistency, pairwise-correlation inference, FDR
 \end{IEEEkeywords}
 
 \section{Introduction}
 
-Cognitive efficiency varies substantially between individuals and declines with age~\cite{chan2014decreased,neubauer2009intelligence}, with especially pronounced deficits in neurodegenerative conditions such as Alzheimer's disease~\cite{zhang2023dissociable,ewers2021segregation,gonneaud2021accelerated} and in psychiatric disorders including schizophrenia~\cite{kim2010working}. Translating this clinical heterogeneity into individual-subject prediction has become a central goal of the ``precision neuroimaging'' program~\cite{finn2015functional,shen2017using}. Task fMRI is particularly attractive as a biomarker substrate because it probes the routing of information across functional networks, the same system whose selective, metabolically bounded engagement is believed to underlie efficient cognition~\cite{attwell2001energy,neubauer2009intelligence}. Yet the specific functional-connectivity signature that distinguishes efficient from inefficient cognitive processing in healthy young adults remains unclear.
+Cognitive efficiency varies substantially between individuals and declines with age~\cite{chan2014decreased,neubauer2009intelligence}, with pronounced deficits in Alzheimer's disease~\cite{zhang2023dissociable,ewers2021segregation,gonneaud2021accelerated} and schizophrenia~\cite{kim2010working}. Translating this heterogeneity into individual-subject prediction is a central goal of ``precision neuroimaging''~\cite{finn2015functional,shen2017using}, and task fMRI is an attractive substrate because it probes how information is routed across functional networks, the system whose selective, metabolically bounded engagement is thought to underlie efficient cognition~\cite{attwell2001energy,neubauer2009intelligence}.
 
-The neural efficiency hypothesis proposes that more capable brains accomplish cognitive tasks with fewer neural resources, a principle with direct metabolic grounding~\cite{haier1988cortical,neubauer2009intelligence,attwell2001energy}. Sparse coding theory formalizes this computationally: the brain represents information through selective activation of small neuronal subsets~\cite{olshausen1996emergence,olshausen2004sparse}. A full routing-based account of efficient cognition, however, must describe not only \emph{how much} is activated, but \emph{which} circuits are engaged for which tasks, \emph{how consistent} this routing is across individuals, and \emph{how modular} the resulting network organization appears. Each of these properties carries a distinct clinical interpretation, for example loss of functional-network segregation in Alzheimer's~\cite{zhang2023dissociable,ewers2021segregation} or diffuse, non-selective cortical recruitment during working memory in schizophrenia~\cite{kim2010working}.
+The neural efficiency hypothesis proposes that more capable brains accomplish tasks with fewer neural resources~\cite{haier1988cortical,neubauer2009intelligence}, and sparse coding theory formalizes the idea that information is carried by selective activation of small neuronal subsets~\cite{olshausen1996emergence,olshausen2004sparse}. A routing-based account must also say \emph{which} circuits are engaged for which task, \emph{how consistent} that routing is across individuals, and \emph{how modular} the resulting organization is, each with its own clinical reading, for example loss of network segregation in Alzheimer's disease~\cite{zhang2023dissociable,ewers2021segregation} or diffuse recruitment during working memory in schizophrenia~\cite{kim2010working}. Individual-differences studies have usually examined one of these metrics at a time: modularity as a marker of plasticity~\cite{gallen2019brain,arnemann2015functional}, connectivity fingerprinting~\cite{finn2015functional,shen2017using}, or activation extent~\cite{haier1988cortical}. To our knowledge the four properties (sparser, more task-selective, more consistent, more modular) have not been tested jointly in one sample with a behavior-derived efficiency label and multiple-comparison control.
 
-Previous neuroimaging studies of individual differences in cognition have typically focused on a single routing metric at a time: modularity as a biomarker of plasticity and treatment response~\cite{gallen2019brain,arnemann2015functional}, functional-connectivity fingerprinting~\cite{finn2015functional,shen2017using}, or activation extent~\cite{haier1988cortical}. Taken together, these literatures motivate a four-property framing of efficient cortical routing: efficient cognition might be \emph{sparser} (fewer regions engaged), \emph{more task-selective} (engaging a canonically predicted network for each task), \emph{more consistent} (converging on a shared routing profile across individuals), and/or \emph{more modular} (exhibiting stronger community structure in task-based connectivity). To our knowledge, these four candidate properties have not previously been tested jointly, in a single sample, with behavior-derived efficiency classification and multiple-comparison control.
+We also compare cortex with three Mixture-of-Experts (MoE) language models~\cite{shazeer2017outrageously,fedus2022switch}, which obtain computational efficiency by sparse expert routing~\cite{bommasani2021opportunities}. Earlier brain--network comparisons concern representational similarity~\cite{yamins2016using,kriegeskorte2015deep,schrimpf2021neural} rather than routing.
 
-To ask whether these biological signatures (if any) reflect domain-general principles of efficient information processing, we also conducted a parallel analysis of three Mixture-of-Experts (MoE) foundation models~\cite{shazeer2017outrageously,fedus2022switch}, which achieve computational efficiency through sparse expert routing~\cite{bommasani2021opportunities}. Prior cross-domain comparisons have focused on representational similarity between deep-network activations and neural activity patterns~\cite{yamins2016using,kriegeskorte2015deep,schrimpf2021neural}; to our knowledge, no study has systematically examined \emph{routing mechanisms} across biological and artificial systems.
-
-This paper makes three contributions. (1) Using behavior-derived efficiency classification, the HCP-MMP1.0 Glasser-360 parcellation with a Cole-Anticevic collapse to seven Yeo-like networks, task-canonical GLM contrasts, Louvain community detection, and BH-FDR-corrected joint testing in 100 HCP participants, we find that no candidate routing property crosses FDR significance: sparsity is directionally reversed and sub-threshold ($d = -0.16$, FDR $p = 0.073$), task-network engagement does not match canonical predictions (0/7 tasks at the Yeo-7 collapse), inter-subject routing consistency shows a borderline positive trend under an independence-safe statistic ($d = +0.40$, $p_{\text{raw}} = 0.049$, FDR $p = 0.073$), and modularity is null ($d = -0.05$, FDR $p = 0.80$). (2) We isolate a specific methodological pitfall that can turn an H3 null into a striking apparent positive: the conventional within-group pairwise-correlation $t$-test inflates its effective $N$ by treating $n(n-1)/2$ non-independent pairs as independent observations. On the same data it reports $p = 1.2 \times 10^{-17}$ for H3, below the subject-level LOO $p = 0.049$ and the label-permutation $p = 0.055$ by approximately 16 orders of magnitude. We recommend that future individual-differences FC studies evaluate inter-subject consistency with subject-level or permutation-based statistics. (3) A parallel analysis of three contemporary MoE foundation models shows that biological cortex is approximately $2.5\times$ more aggregate-sparse than artificial expert routing, which is uniformly load-balanced across semantic input categories. Because the biological reference point itself does not cross FDR as a routing-level efficiency signature in our data, cross-domain similarity claims that use HCP-scale fMRI as the biological anchor should be framed with that caveat.
+The paper makes three contributions. (1) In 100 HCP participants, with the HCP-MMP1.0 parcellation, task-canonical GLM contrasts, Louvain community detection and BH-FDR-controlled joint testing, one of the four candidates, inter-subject routing consistency, survives FDR, and permutation, rank, continuous-score and Bayesian analyses agree; sparsity, canonical task-network engagement and modularity are not supported. (2) We quantify an inference pitfall that the consistency analysis invites: the within-group pairwise-correlation $t$-test treats $n(n-1)/2$ non-independent pairs as independent and, on our data, overstates significance by about 28 orders of magnitude relative to subject-level and permutation inference (Fig.~\ref{fig:null}); we give the subject-level statistic as a drop-in replacement. (3) Cortex is more concentrated than MoE expert use pooled over layers, but single MoE layers can be more concentrated than cortex, so cross-domain efficiency comparisons must state the level of pooling.
 
 \section{Methods}
 
-\subsection{Neuroimaging Data and Preprocessing}
+\subsection{Participants, Data, and Preprocessing}
 
-Functional MRI data were obtained from the Human Connectome Project Young Adult Release (HCP-YA;~\cite{van2013wu}), for 100 healthy young adults (age 22--35 years) who completed all seven task-fMRI paradigms in both LR and RL phase-encoding directions, with mean framewise displacement $< 0.5$~mm. Data underwent the HCP Minimal Preprocessing Pipeline~\cite{glasser2013minimal} with ICA-FIX denoising~\cite{salimi2014automatic}.
+We used HCP Young Adult task fMRI~\cite{van2013wu} from 100 healthy adults (53 female; open-access age bands 22--25: 17, 26--30: 42, 31--35: 40, $>35$: 1). The sample is the first 100 participants, in ascending subject ID, of a list of HCP-YA participants with complete data for all seven tasks in both phase-encoding directions (LR and RL); no further selection was applied, and no motion threshold was used for selection. Head motion was nonetheless low: mean relative RMS displacement was $0.089$~mm (SD $0.030$), no run exceeded $0.5$~mm (maximum $0.36$~mm), and motion did not differ between efficiency groups ($p = 0.64$). We used the MSMAll-aligned, minimally preprocessed CIFTI time series (\texttt{tfMRI\_*\_Atlas\_MSMAll.dtseries.nii})~\cite{glasser2013minimal,robinson2014msm}, without ICA-FIX denoising. HCP-YA contains twins and siblings; family identifiers are restricted data that we did not use, so family structure is not modelled (Sec.~\ref{sec:limits}).
 
-\subsection{Brain Parcellation and Activation Extraction}
+\subsection{Parcellation and Activation Extraction}
 
-Regional activity was extracted by averaging each subject's CIFTI grayordinate timeseries within the 360 cortical parcels of the HCP-MMP1.0 multi-modal atlas~\cite{glasser2016multi}, using the parcel-index CIFTI distributed with the Cole-Anticevic Net Partition release~\cite{ji2019mapping}. Each parcel was then assigned to one of the 12 Cole-Anticevic functional networks~\cite{ji2019mapping} via modal voting on the same-sample 12-network dlabel, and these 12 networks were collapsed to seven Yeo-like networks (VIS, SMN, DAN, VAN, LIM, FPN, DMN)~\cite{yeo2011organization} by the grouping \{Visual1, Visual2\}${\to}$VIS; \{Somatomotor, Auditory\}${\to}$SMN; \{Dorsal-Attention\}${\to}$DAN; \{Cingulo-Opercular, Language, Ventral-Multimodal\}${\to}$VAN; \{Orbito-Affective\}${\to}$LIM; \{Frontoparietal, Posterior-Multimodal\}${\to}$FPN; \{Default\}${\to}$DMN. The resulting mapping placed 60 parcels in VIS, 54 in SMN, 23 in DAN, 83 in VAN, 6 in LIM, 57 in FPN, and 77 in DMN. Participants completed seven HCP tasks: Working Memory (N-back), Motor (finger/foot/tongue), Language (story vs.\ math), Social Cognition (theory of mind), Relational Processing (abstract matching), Emotion (face matching), and Gambling (reward decisions). Task-evoked activation was estimated by a condition-wise GLM with per-task canonical contrasts (2-back vs.\ 0-back for WM; all movements vs.\ cue for MOTOR; story vs.\ math for LANGUAGE; mental-state vs.\ random-motion control for SOCIAL; relational vs.\ match for RELATIONAL; fear vs.\ neutral for EMOTION; win vs.\ loss for GAMBLING), yielding a (100 participants $\times$ 7 tasks $\times$ 360 parcels) activation matrix that forms the raw routing substrate on which all downstream analyses operate (Fig.~\ref{fig:brain}). When extraction failed for a given subject/task cell, that cell was left as \texttt{NaN} and excluded from downstream analyses; no synthetic or model-imputed data was substituted into the pipeline.
+Each run's grayordinate time series was averaged within the 360 cortical parcels of HCP-MMP1.0~\cite{glasser2016multi}. For each run we fitted a GLM to the parcel time series containing only the HCP block regressors of that task, convolved with the SPM canonical double-gamma haemodynamic response (TR $= 0.72$~s), a discrete-cosine high-pass basis (128~s) and an intercept. Contrasts followed the HCP task definitions: 2-back vs.\ 0-back (WM); all five movements vs.\ fixation (MOTOR); story vs.\ math (LANGUAGE); mental vs.\ random motion (SOCIAL); relational vs.\ match (RELATIONAL); fearful faces vs.\ shapes (EMOTION); win vs.\ loss (GAMBLING). The LR and RL contrast vectors were averaged and $z$-scored across parcels, giving a $100 \times 7 \times 360$ activation array; all 700 subject $\times$ task cells were extracted, and design condition numbers were at most $1.7$. This first-level model corrects the submitted version, whose GLM also contained event-level regressors overlapping the task blocks (for WM, a rank-deficient design), matched regressors by name substring, and contrasted MOTOR against the cue; all results below come from the corrected model. Each parcel was assigned to one of the 12 Cole-Anticevic networks~\cite{ji2019mapping} by modal vote, and the 12 were collapsed to seven Yeo-like networks~\cite{yeo2011organization}: \{Visual1, Visual2\}$\to$VIS; \{Somatomotor, Auditory\}$\to$SMN; \{Dorsal-Attention\}$\to$DAN; \{Cingulo-Opercular, Language, Ventral-Multimodal\}$\to$VAN; \{Orbito-Affective\}$\to$LIM; \{Frontoparietal, Posterior-Multimodal\}$\to$FPN; \{Default\}$\to$DMN (60, 54, 23, 83, 6, 57 and 77 parcels).
 
-\subsection{Efficiency Classification}
+\subsection{Efficiency Score}
 
-To avoid the circularity of defining efficiency via the same neural-activation metric subsequently tested, we classified participants into high- and low-efficiency groups using an independent \emph{behavioral} criterion: the working-memory task accuracy-to-reaction-time ratio,
+Participants were split at the median of a working-memory accuracy-to-reaction-time ratio, $E_i = \mathrm{Acc}_i / (\mathrm{RT}_i / \overline{\mathrm{RT}})$, with $\mathrm{Acc}_i$ the mean 0-back/2-back accuracy and $\mathrm{RT}_i$ the mean median response time, into high- and low-efficiency groups ($n = 50$ each). The score is independent of the neuroimaging measures, being computed from behavior alone, but not of the task battery: Working Memory is also one of the seven fMRI paradigms. Its run-to-run reliability (LR vs.\ RL) was $r = 0.80$ (Spearman--Brown $0.89$), and 84\% of participants fall on the same side of the median in both runs. Because a median split discards information, every primary measure is also related to the continuous $E_i$ (Sec.~\ref{sec:sens}).
+
+\subsection{Hypotheses, Primary Outcomes, and Inference}
+
+Each hypothesis has one primary outcome and one test, computed with one value per participant. \textbf{H1} (efficient brains are sparser): composite sparsity averaged over the seven tasks, Student $t$. \textbf{H2} (task-selective engagement): the descriptive canonical-match count below and, added for this version, a group test of each participant's mean entropy selectivity (Welch $t$). \textbf{H3} (more consistent routing): subject-level LOO correlation, Welch $t$. \textbf{H4} (more modular): Newman's $Q$, Student $t$. The pre-specified primary BH-FDR family is \{H1, H3, H4\}; because H2 had no group test in the original plan, it enters only a four-test sensitivity family. Secondary families (the four H1 metrics, the three H4 metrics, the seven per-task H1 tests and the six continuous-score correlations) are corrected within themselves. For each primary test we report Cohen's $d$ with a 95\% CI, a two one-sided test (TOST) of equivalence to $|d| < 0.5$~\cite{lakens2017equivalence}, and a JZS Bayes factor $\mathrm{BF}_{10}$ (Cauchy prior scale $\sqrt{2}/2$)~\cite{rouder2009bayesian}. The submitted version tested H1 on all 700 subject $\times$ task values as if independent; the subject-level test used here respects the independence requirement that motivates Sec.~\ref{sec:loo}.
+
+\subsection{Activation-Distribution Sparsity}
+
+Three indices describe how concentrated a task map is across parcels: the Gini coefficient of $u_i = |a_i|$, $G = \sum_{i,j}|u_i - u_j| / (2n\sum_i u_i)$; an entropy index $S = 1 - H/\ln B$ from a $B = 50$-bin histogram of the $z$-scored values; and the share of $\sum_i u_i$ carried by the top 10\% of parcels. The composite is their mean. Because maps are $z$-scored within subject and task, these indices measure the spatial concentration of the activation distribution, not activation extent, amplitude or metabolic cost; we call the construct activation-distribution sparsity and do not equate it with neural resource consumption. $z$-scoring also makes $L_0$ sparsity and supra-threshold region counts constant, so they are not used.
+
+\subsection{Routing Consistency and the Subject-Level Statistic}\label{sec:loo}
+
+Each participant's routing profile $\mathbf{x}_i$ is the flattened $7 \times 7$ task-by-network matrix of network-mean activations. The primary H3 statistic is
 \begin{equation}
-E_i = \frac{\mathrm{Acc}_i}{\mathrm{RT}_i / \overline{\mathrm{RT}}},
+r_i^{\mathrm{LOO}} = \operatorname{corr}\Big(\mathbf{x}_i,\ \tfrac{1}{|g_i|-1}\textstyle\sum_{j \in g_i,\, j \neq i} \mathbf{x}_j\Big),
 \end{equation}
-where $\mathrm{Acc}_i$ is each participant's mean 0-back/2-back accuracy and $\mathrm{RT}_i$ their mean response time normalized by the sample mean $\overline{\mathrm{RT}}$. A median split on $E_i$ divided the 100 participants into equal-sized high-efficiency ($n = 50$) and low-efficiency ($n = 50$) groups. All group-difference tests reported below use this behavioral grouping.
+where $g_i$ is $i$'s group; the 100 subject-level LOO statistics enter a Welch $t$-test. In pseudocode: \texttt{for i in group: r[i] = corr(x[i], mean(x[group $\setminus$ i])); welch\_t(r[high], r[low])}. The LOO templates of members of the same group overlap, so the $r_i$ are not strictly independent; a label-permutation test (10\,000 permutations, statistic $=$ difference of within-group mean pairwise $r$), which makes no independence assumption, is the confirmatory check. For comparison we also run the analysis a practitioner would reach for, and which our own earlier draft used: all $1225$ within-group pairwise correlations per group pooled into an independent-samples $t$-test.
 
-\subsection{Statistical Inference}
+\subsection{Task Selectivity and Modularity}
 
-For each primary hypothesis, we report an effect size (Cohen's $d$), an independent-samples $t$-test (Welch for H3 LOO-$r$, pooled Student's for H1 and H4), and a non-parametric check (Mann--Whitney $U$). Benjamini--Hochberg (BH) FDR correction at $\alpha = 0.05$ was applied across (i) the three primary hypothesis tests (H1 sparsity, H3 routing consistency, H4 modularity), (ii) the four overall H1 sparsity metrics (Gini, entropy, concentration, composite), (iii) the three H4 network-organization metrics (modularity $Q$, segregation, participation), and (iv) the seven per-task composite-sparsity comparisons.
+Task selectivity is $S_t = 1 - H_t/\log_2 K$, with $H_t$ the entropy of the absolute network-mean activations normalized to proportions over $K$ networks ($K = 7$, or $K = 12$ at native resolution). Canonical expectations were fixed before analysis at Yeo-7 (WM, RELATIONAL: FPN or DAN; MOTOR: SMN; LANGUAGE: FPN or VAN; SOCIAL: DMN; EMOTION: LIM; GAMBLING: FPN); at 12 networks each expectation is carried over to the Cole-Anticevic networks that collapse into it, so no new choice is made. A task matches if its highest signed network mean is an expected network; chance is estimated by permuting network labels.
 
-For H3 (inter-subject routing consistency), the standard practice of flattening all within-group pairwise Pearson correlations into a long vector and running an independent-samples $t$-test violates the independence assumption: each subject's routing profile contributes to $n - 1$ pairs, so the $n(n-1)/2$ pairs constitute far fewer effective degrees of freedom than they would if they were independent. We therefore use an \emph{independence-safe} primary statistic. For each subject, we compute the Pearson correlation between their flattened 7-task-by-7-network routing profile and the mean profile of the other $n - 1$ members of their group (leave-one-out, LOO). This yields $n_{\text{high}} + n_{\text{low}} = 100$ independent scalars, on which we apply a Welch $t$-test. A two-sided label-permutation test (10\,000 permutations on efficiency labels, statistic = difference of within-group mean pairwise $r$) is reported as an additional sensitivity check, and a percentile bootstrap (10\,000 resamples) gives a 95\% CI on the mean LOO-$r$ difference between groups. For transparency and as a cautionary comparison, we also report the naive pairwise-correlation $t$-test statistic with its inflated effective $N$, flagged in text and tables as for-reference-only.
+For H4, each participant's $360 \times 360$ matrix $A$ holds Pearson correlations between parcels' seven-task activation vectors. This is task-activation-profile similarity with seven observations per edge, not time-series functional connectivity. Louvain~\cite{blondel2008fast} (resolution 1, seed 0) is run on $|A|$: two parcels whose task profiles are strongly anti-correlated are coupled by the same task factor with opposite sign, so we treat them as related rather than unrelated; a positive-edge-only graph is a sensitivity check. From the partition $c$ we compute Newman's $Q = \frac{1}{2m}\sum_{ij}[|A_{ij}| - k_ik_j/2m]\,\delta(c_i,c_j)$, segregation $(\bar w_{\mathrm{within}} - \bar w_{\mathrm{between}})/(\bar w_{\mathrm{within}} + \bar w_{\mathrm{between}})$ with $\bar w$ the mean $|A_{ij}|$ within and between communities, and the mean participation coefficient $P_i = 1 - \sum_c (k_{ic}/k_i)^2$~\cite{guimera2005functional}. Partition stability is assessed over 20 Louvain seeds.
 
-\subsection{Sparsity Quantification}
+\subsection{Mixture-of-Experts Models}
 
-Activation sparsity was quantified using three metrics, all computed on the absolute parcel activations $u_i = |a_i|$ (since $z$-scored activations can be negative). The \textbf{Gini coefficient}:
-\begin{equation}
-G = \frac{\sum_{i,j}|u_i - u_j|}{2n\sum_{i}u_i}.
-\end{equation}
-The \textbf{entropy-based sparsity} is the normalized, sign-inverted Shannon entropy of the $u_i$ distribution: we histogram $u$ into $B = 50$ bins with empirical bin probabilities $p_b = n_b / \sum_{b'} n_{b'}$ and set $S = 1 - H / \ln B$ with $H = -\sum_b p_b \ln p_b$, so $S \in [0, 1]$ and larger $S$ indicates more concentrated (sparser) activation. The \textbf{concentration ratio} is the proportion of total $\sum u$ carried by the top 10\% of parcels ($k = 36$ of $360$).
-
-\subsection{Network Modularity, Task Selectivity, and Routing Consistency}
-
-For each subject, we computed a $360 \times 360$ activation-profile similarity matrix $A$ as the Pearson correlation of each parcel's 7-task activation vector with every other parcel's 7-task vector. We emphasize that this is a task-activation-profile similarity (seven observations per edge), not a conventional resting-state or timeseries-based functional connectivity. Communities were detected by Louvain modularity optimization~\cite{blondel2008fast} on $|A|$ (absolute-valued weighted graph, resolution $= 1.0$, seed $= 0$), yielding a data-driven community partition per subject (median 4 communities, IQR [4, 5], range [3, 6]). Newman's modularity $Q$ was computed on the resulting partition,
-\begin{equation}
-Q = \frac{1}{2m}\sum_{ij}\left[A_{ij} - \frac{k_i k_j}{2m}\right]\delta(c_i, c_j),
-\end{equation}
-with $k_i = \sum_j A_{ij}$, $m = \tfrac{1}{2}\sum_{ij}A_{ij}$, $c_i$ the community of node $i$, and $\delta$ the Kronecker delta.
-
-Task-network selectivity (primary) was $S_t = 1 - H_t / \log_2 7$, with $H_t = -\sum_n p_n \log_2 p_n$ the Shannon entropy (base matches the implementation; normalization makes it scale-free) of the activation proportions $p_n$ across the 7 networks. $S_t \in [0, 1]$: 0 for uniform activation across networks, 1 for activation concentrated on one. The $(\max - \text{mean})/\max$ index saturates near 1 on 7-element vectors and is reported only descriptively.
-
-Inter-subject routing consistency (primary, H3) was computed per the independence-safe LOO procedure of Sec.~II-D. For reference, we also report the mean pairwise Pearson correlation of flattened task-by-network profiles within each group, which is the statistic used (inappropriately) by the conventional pairwise-$t$ approach.
-
-\subsection{Foundation Model Analysis}
-
-We analyzed three MoE models: Switch Transformer (base-8, 8 experts, Top-1, $\sim$220M params)~\cite{fedus2022switch}, Qwen1.5-MoE-A2.7B (60 experts + 4 shared, Top-4, 14.3B)~\cite{bai2023qwen}, and DeepSeek-MoE-16B-base (64 experts + 2 shared, Top-6, 16.4B)~\cite{dai2024deepseekmoe}. Expert activation patterns were extracted via PyTorch forward hooks during inference on inputs from four NLP benchmarks (RACE~\cite{lai2017race}, SNLI~\cite{bowman2015large}, SST-2~\cite{socher2013recursive}, GSM8K~\cite{cobbe2021training}), organized into seven semantic categories paralleling the fMRI tasks (618 samples total). For each model, we computed aggregate sparsity (Gini of marginal expert activation), expert selectivity, and the effective number of experts, $E_{\text{eff}} = e^{H}$ where $H = -\sum_{i} p_i \ln p_i$.
-
-\section{Results}
-
-\subsection{Activation Sparsity (H1): Directionally Reversed, Sub-threshold under FDR}
-
-Activation sparsity did not cross BH-FDR significance across the three primary hypotheses and showed the opposite direction from the classical neural-efficiency prediction. Across three informative sparsity indices (Gini, entropy-based sparsity, top-10\% concentration ratio), the high-efficiency group showed consistently \emph{lower} sparsity than the low-efficiency group. On the composite index the effect was $d = -0.16$, $p_{\text{raw}} = 0.041$, with within-H1-family $p_{\text{FDR}} = 0.054$ (Table~\ref{tab:sparsity}) and cross-hypothesis $p_{\text{FDR}} = 0.073$ (Table~\ref{tab:summary}); per-metric: Gini $d = -0.17$, $p_{\text{raw}} = 0.025$; concentration ratio $d = -0.16$, $p_{\text{raw}} = 0.038$. The direction is consistent with wider activation recruitment in high performers, not sparser. Two sparsity metrics considered in pilot versions of this analysis, $L_0$-sparsity and the count of regions above the 95th-percentile threshold, are definitionally constant at $0.95$ and $\approx 18$ respectively for $z$-scored data and were removed as non-informative.
+We analyzed Switch-base-8 (8 experts, Top-1)~\cite{fedus2022switch}, Qwen1.5-MoE-A2.7B (60 routed experts, Top-4)~\cite{bai2023qwen} and DeepSeek-MoE-16B-base (64 routed experts, Top-6)~\cite{dai2024deepseekmoe}. Text came from RACE~\cite{lai2017race}, SNLI~\cite{bowman2015large}, SST-2~\cite{socher2013recursive} and GSM8K~\cite{cobbe2021training}, sorted into seven categories each paired with one fMRI task (Table~\ref{tab:mapping}); 618 samples were collected and up to 50 per category (318 sequences, $\le 128$ tokens) were run through each model. Routing was read from the router modules by forward hooks. The extractor of the submitted version also matched non-router modules whose names contain ``gate'' and counted their outputs as expert choices; all MoE numbers here come from a corrected extractor that accepts only per-token distributions over the $E$ experts or the router's selected expert indices. For each model we compute the Gini coefficient of expert use pooled over layers and tokens, the same per layer (Switch: encoder layers only, since the decoder sees one token per sequence), the effective number of experts $e^{H}$, and each expert's dominant-category share (uniform $= 1/7$). At the token level routing is sparse by construction: each token activates $k$ of $E$ experts.
 
 \begin{table}[t]
-\caption{Activation-sparsity indices by efficiency group. Negative $d$ indicates \emph{lower} sparsity in the high-efficiency group, i.e.\ the opposite direction from the classical neural-efficiency prediction. Composite sparsity is the mean of Gini, entropy sparsity, and concentration ratio ($L_0$-sparsity and active-region count are omitted as non-informative constants on $z$-scored data). $p_{\text{FDR}}$ here is within the H1 metric family; the primary cross-hypothesis FDR across H1/H3/H4 (Table~\ref{tab:summary}) gives $p = 0.073$ for composite sparsity.}
-\label{tab:sparsity}
+\caption{Correspondence between fMRI tasks and MoE text categories. The pairing is an analogy, not a matched manipulation; RISK--GAMBLING is the weakest.}
+\label{tab:mapping}
 \centering
-\small
-\begin{tabular}{lccccc}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lll@{}}
 \toprule
-\textbf{Metric} & \textbf{High} & \textbf{Low} & $d$ & $p_{\text{raw}}$ & $p_{\text{FDR}}$ \\
+\textbf{fMRI task} & \textbf{Text category} & \textbf{Source (selection)} \\
 \midrule
-Gini Coefficient     & $0.440$ & $0.444$ & $-0.17$ & $0.025$ & $0.054$ \\
-Entropy Sparsity     & $0.157$ & $0.162$ & $-0.12$ & $0.117$ & $0.117$ \\
-Concentration Ratio  & $0.286$ & $0.289$ & $-0.16$ & $0.038$ & $0.054$ \\
-Composite Sparsity   & $0.294$ & $0.298$ & $-0.16$ & $0.041$ & $0.054$ \\
+Working Memory & Mathematical & GSM8K word problems \\
+Motor & Procedural & RACE passages (instructional) \\
+Language & Narrative & RACE passages (story) \\
+Social & Social & SNLI premises (social keywords) \\
+Relational & Scientific & RACE passages (expository) \\
+Emotion & Emotional & SST-2 sentences \\
+Gambling & Risk decision & SNLI premises (risk keywords) \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\begin{figure*}[!t]
+\section{Results}
+
+\subsection{H1: Activation-Distribution Sparsity}
+
+Sparsity did not differ between groups (Table~\ref{tab:sparsity}; composite $d = -0.26$, 95\% CI $[-0.66, +0.13]$, $p = 0.19$). Every index pointed, if anything, toward \emph{less} sparse activation in the high-efficiency group, the direction opposite to the neural-efficiency prediction, and none of the seven per-task tests crossed FDR (smallest $p_{\text{FDR}} = 0.49$). H1 is not supported.
+
+\begin{table}[t]
+\caption{Activation-distribution sparsity by efficiency group, one value per participant (mean over seven tasks). Negative $d$: the high-efficiency group is less sparse. $p_{\text{FDR}}$ is within the four-metric H1 family.}
+\label{tab:sparsity}
 \centering
-\includegraphics[width=\textwidth]{Picture1.pdf}
-\caption{Group-mean multi-task brain activation heatmap across 100 HCP participants and seven cognitive tasks. Rows are the seven HCP tasks (ordered by hierarchical clustering over parcels); columns are the 360 HCP-MMP cortical parcels (down-sampled to 60 representative columns and ordered by hierarchical clustering over tasks). Color encodes group-mean task-evoked activation (z-score). The panel shows the raw routing substrate on which all four routing properties were subsequently tested.}
-\label{fig:brain}
-\end{figure*}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Metric} & \textbf{High} & \textbf{Low} & $d$ & $p$ & $p_{\text{FDR}}$ \\
+\midrule
+Gini coefficient    & $0.445$ & $0.445$ & $-0.05$ & $0.80$ & $0.80$ \\
+Entropy sparsity    & $0.157$ & $0.163$ & $-0.35$ & $0.082$ & $0.33$ \\
+Concentration ratio & $0.288$ & $0.290$ & $-0.21$ & $0.30$ & $0.40$ \\
+Composite           & $0.297$ & $0.299$ & $-0.26$ & $0.19$ & $0.39$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\subsection{Task-Selective Network Engagement (H2): Not Supported}
+\subsection{H2: Task-Selective Network Engagement}
 
-Primary task selectivity, measured by the unsaturated entropy-based index $S_t = 1 - H_t / \log_2 7$ on the Yeo-7-collapsed activation vector, had a mean of $0.124$ across the seven tasks, close to the uniform baseline ($S_t = 0$) and far from the single-network concentration ceiling ($S_t = 1$). By this measure, task activation is broadly distributed across Yeo-7 networks rather than concentrated on one. The $(\max - \text{mean}) / \max$ index, reported only for completeness, saturates near $1$ on 7-element vectors and should not be used for hypothesis decisions. The network most engaged by each task did not align with the network canonically expected (0/7 canonical-match rate at the Yeo-7 collapse). Fig.~\ref{fig:glassbrain} illustrates why: at the per-parcel resolution, several task maps are spatially organized in the anatomically expected way (MOTOR around the central sulcus, EMOTION around ventral face-responsive temporal cortex, WM laterally in frontoparietal regions), but the Yeo-7 signed-mean aggregation dilutes focal hot spots across all parcels in a network, so that the argmax reflects each network's overall signed baseline as much as its peak task-specific activation. Because our Yeo-7 labels are derived from a Cole-Anticevic 12-network collapse (Sec.~II-B), we interpret the 0/7 result as conditional on that collapse: finer-grained 12-network or per-HCP-MMP-parcel tests may recover task specificity that the Yeo-7 coarsening washes out. H2 is not supported at the Yeo-7 resolution.
+Parcel-level maps show the expected anatomy (Fig.~\ref{fig:glassbrain}): WM and RELATIONAL engage lateral frontoparietal cortex, MOTOR the central sulcus and EMOTION ventral visual cortex. At the network level, mean selectivity at Yeo-7 was $\overline{S_t} = 0.106$, close to the uniform baseline, and the most engaged network matched the canonical prediction in 2/7 tasks (WM and RELATIONAL, both FPN). At the native 12 networks the count was also 2/7 (the same two tasks, Frontoparietal), against a chance expectation of $1.4$ (permutation $p = 0.44$); MOTOR peaked in Cingulo-Opercular with Somatomotor second, and LANGUAGE in Default with Language second. The signed network mean spreads focal peaks over large networks, so the match count is a coarse test, but it is not rescued by the finer partition. Selectivity did not differ between efficiency groups (Yeo-7: $d = +0.14$, $p = 0.50$; 12 networks: $d = +0.40$, $p = 0.050$). H2 is not supported.
 
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{PictureBrains.pdf}
-\caption{Group-averaged task-evoked activation for each of the seven HCP tasks ($N = 100$), rendered on the HCP-MMP1.0~\cite{glasser2016multi} Glasser-360 atlas in MNI152 space. Each panel is a dorsal (axial) glass-brain view; all panels share a single symmetric diverging color scale (red: positive, blue: negative). Entropy-based task selectivity across the Yeo-7 collapse is $\overline{S_t} = 0.124$, and the network most engaged by each task does not match the canonically expected network (0/7 matches).}
+\caption{Group-averaged task-evoked activation for the seven HCP tasks ($N = 100$) on the HCP-MMP1.0 atlas~\cite{glasser2016multi} in MNI152 space (dorsal glass-brain views, one shared diverging color scale). The most engaged network matches the canonical prediction in 2/7 tasks at both Yeo-7 and 12-network resolution (WM and RELATIONAL, frontoparietal).}
 \label{fig:glassbrain}
 \end{figure*}
 
-\subsection{Inter-Subject Routing Consistency (H3): Borderline Positive Trend, Sub-threshold under FDR}
+\subsection{H3: Inter-Subject Routing Consistency}
 
-\emph{Primary (subject-level LOO).} For each subject we computed the Pearson correlation between their flattened $7 \times 7$ task-by-network routing profile and the leave-one-out mean profile of their group; these 100 scalars are independent observations. A Welch $t$-test returned $r_{\text{high}} = 0.683$ versus $r_{\text{low}} = 0.647$, $d = +0.40$, $t = 1.996$, $p_{\text{raw}} = 0.049$, bootstrap 95\% CI on the group difference $[+0.001, +0.072]$; Mann--Whitney $U$ gave $p = 0.067$. \textbf{Under BH-FDR across the three primary hypotheses, H3 does not cross $\alpha_{\text{FDR}} = 0.05$ ($p_{\text{FDR}} = 0.073$).} At $d \approx 0.4$ and $n = 50$ per group, a two-sided $t$-test has only $\approx 51\%$ power at $\alpha = 0.05$, so a confidence interval whose lower bound sits near zero is the expected outcome under either a true moderate effect or a true null. A 10\,000-permutation label test on the within-group mean pairwise $r$ converged with the LOO-r result (observed difference $+0.048$ against null mean $\approx 0$, SD $0.025$; permutation $p = 0.055$).
+\emph{Primary.} Subject-level LOO correlations were $r = 0.680$ (high) and $0.626$ (low): $d = +0.52$, 95\% CI $[+0.12, +0.92]$, Welch $t = 2.59$, $p = 0.011$; Mann--Whitney $p = 0.013$; bootstrap CI on the difference $[+0.014, +0.092]$. The label-permutation test, which needs no independence assumption, agrees ($\Delta r = +0.069$, null SD $0.029$, $p = 0.018$). H3 survives the primary BH-FDR family ($p_{\text{FDR}} = 0.033$) and the four-test sensitivity family ($p_{\text{FDR}} = 0.044$), and the Bayes factor gives moderate evidence for a difference ($\mathrm{BF}_{10} = 4.0$). Consistency is lower in participants who move more ($r = -0.28$ with mean relative RMS), but motion does not differ between groups, and with motion as a covariate the group effect is unchanged ($p = 0.013$). The CI is wide: effects from $d \approx 0.1$ to $0.9$ are compatible with the data, and resolving the lower end would need about 1100 participants per group, whereas replicating $d = 0.52$ at 80\% power needs about 60.
 
-\emph{Methodological caveat.} Pooling all $n(n-1)/2 = 1225$ within-group pairwise correlations and running an independent-samples $t$-test, on identical data, returns $t = 8.62$, $p = 1.23 \times 10^{-17}$, with apparent $d = +0.35$. The gap between this naive $p = 10^{-17}$ and the independence-safe $p \approx 0.05$ spans approximately 16 orders of magnitude, a direct consequence of treating as independent $\approx 2450$ observations that derive from only 100 subjects. Even the nominal effect size is biased downward (apparent $d = +0.35$ versus subject-level $d = +0.40$), yet the naive test's $p$-value looks far stronger because its effective $N$ is roughly $25\times$ its true value. Claims of greater inter-subject routing convergence in high-performing or clinical-control participants should therefore be demonstrated under subject-level or permutation statistics before being treated as candidate biomarkers.
+\emph{The pairwise-correlation caveat.} Pooling the $1225$ within-group pairwise correlations per group into an independent-samples $t$-test gives, on the same data, $t = 11.68$ and $p = 1.0 \times 10^{-30}$ with an apparent $d = +0.47$. The test inflates the effective sample size, from 100 participants to about 2450 pairs, and overstates significance by about 28 orders of magnitude. Fig.~\ref{fig:null} shows why: the null distribution implied by the naive test is about $4.9\times$ narrower than the permutation null. Here the conclusion survives correct inference, but only just; on the submitted first-level model the same naive test gave $p = 10^{-17}$ while subject-level inference gave $p = 0.049$ and permutation $p = 0.055$, so the naive test would report an overwhelming effect in either case, regardless of whether a correct test finds one.
 
-\subsection{Network Modularity (H4): Not Supported}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig_null_distributions.pdf}
+\caption{Null distributions for the H3 group difference on one axis. Top: normal null implied by the naive pairwise $t$-test. Middle: null of the subject-level LOO Welch test. Bottom: label-permutation null (10\,000 permutations). Dashed line: observed difference. The naive null is far too narrow because the 2450 pairs share 100 participants.}
+\label{fig:null}
+\end{figure}
 
-Under Louvain community detection (3--6 communities per subject, median 4), Newman's modularity $Q$ did not differ between high- and low-efficiency groups ($d = -0.05$, $p_{\text{raw}} = 0.798$, $p_{\text{FDR}} = 0.798$; Fig.~\ref{fig:modularity}). Network segregation was directionally reduced in the high-efficiency group ($d = -0.40$, $p_{\text{raw}} = 0.048$, $p_{\text{FDR, within-family}} = 0.144$), consistent with slightly more integrated community structure; mean participation coefficient was sub-threshold ($d = -0.26$, $p_{\text{raw}} = 0.199$, $p_{\text{FDR, within-family}} = 0.299$). None of the three network-organization indices crossed FDR within the modularity family in our sample; H4 is not supported at $\alpha_{\text{FDR}} = 0.05$. The segregation effect ($d = -0.40$, nominally significant but not FDR-corrected) is the largest sub-threshold modularity effect in the study and is the natural target of a higher-powered replication.
+\subsection{H4: Network Modularity}
+
+Louvain found 3--6 communities per participant (median 4). Modularity did not differ between groups ($Q$: $d = +0.19$, $p = 0.34$; Fig.~\ref{fig:modularity}), nor did segregation ($d = +0.35$, $p = 0.085$) or participation ($d = -0.14$, $p = 0.50$; all within-family $p_{\text{FDR}} \ge 0.25$). Individual partitions varied across 20 Louvain seeds (median ARI $0.54$, NMI $0.54$), but $Q$ was stable (within-participant SD $0.002$ against a between-participant SD of $0.007$), and seed-averaged tests ($Q$: $d = +0.25$, $p = 0.21$) and a positive-edge-only graph ($d = +0.33$, $p = 0.11$) reproduce the null. H4 is not supported.
 
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{Picture2.pdf}
-\caption{Network-organization metrics by efficiency group (Louvain community detection). Modularity index $Q$, network segregation, and mean participation coefficient are shown as raincloud plots for high- (blue) and low- (red) efficiency groups, with a half-violin density, an embedded boxplot, and per-subject scatter. Cohen's $d$ is printed inside each panel; BH-FDR-corrected $p$-values for the three-metric modularity family are reported in Sec.~III-D, and none crosses $\alpha = 0.05$.}
+\caption{Network-organization metrics by efficiency group (Louvain, seed 0): modularity $Q$, segregation and mean participation coefficient (half-violin, box plot and one dot per participant). Cohen's $d$ is printed in each panel; none of the three metrics crosses FDR.}
 \label{fig:modularity}
 \end{figure*}
 
-\subsection{Foundation Model Routing (H5--H6)}
+\subsection{Sensitivity Analyses}\label{sec:sens}
 
-All three MoE architectures exhibited substantially lower aggregate sparsity than biological cortex (Table~\ref{tab:moe}): mean MoE Gini $= 0.176$ against brain mean Gini $= 0.443$, approximately $2.5\times$. All models showed near-uniform expert utilization (85--97\% effective), consistent with load-balancing training objectives.
+With the continuous efficiency score in place of the median split (Table~\ref{tab:summary}), routing consistency, computed against the whole-sample LOO template, correlated positively with efficiency ($r = 0.36$, 95\% CI $[0.18, 0.52]$, $p = 0.0002$, $p_{\text{FDR}} = 0.001$; permutation of $E_i$: $p = 0.0002$; partial $r = 0.34$ controlling for motion). Two secondary associations also crossed FDR within this family: composite sparsity ($r = -0.26$, $p_{\text{FDR}} = 0.026$) and participation ($r = -0.24$, $p_{\text{FDR}} = 0.037$), both negative, i.e.\ more efficient participants distribute activation slightly more broadly and have slightly less cross-community integration; neither was detected by the pre-specified group tests. Modularity ($r = 0.18$) and selectivity ($r = -0.02$) did not.
 
-\begin{table}[t]
-\caption{Foundation model routing metrics. ``Select.'' for MoE rows denotes the dominant-category weight fraction, with a uniform baseline of $1/7 \approx 0.143$ across the seven input categories; ``Spec.'' is the fraction of experts scoring above $0.5$ on that metric. The brain row uses the entropy-based task selectivity $\overline{S_t} = 0.124$ across Yeo-7 networks (Sec.~III-B), not on the same scale as the MoE dominant-category metric, and is provided only for quick reference. The aggregate-sparsity (Gini) column is directly comparable across rows.}
-\label{tab:moe}
-\centering
-\small
-\begin{tabular}{lcccc}
-\toprule
-\textbf{Model} & \textbf{Gini} & $E_{\text{eff}}$ & \textbf{Select.} & \textbf{Spec.} \\
-\midrule
-Switch-8 & 0.244 & 6.9/8 & 0.238 & 0\% \\
-Qwen-MoE & 0.070 & 58.2/60 & 0.245 & 0\% \\
-DeepSeek-16B & 0.215 & 54.6/64 & 0.243 & 0\% \\
-\midrule
-\textbf{Brain} & \textbf{0.443} & --- & $\mathbf{0.124}^{*}$ & --- \\
-\bottomrule
-\end{tabular}
-\vspace{1pt}\\
-{\scriptsize $^{*}$ Entropy-based task selectivity across Yeo-7, different units from MoE dominant-category fraction; see caption.}
-\end{table}
-
-Expert category specialization was uniformly absent across architectures: mean dominant-category selectivity indices ($\sim$0.24) stayed close to the uniform baseline of $1/7 \approx 0.14$, indicating that no expert developed category-specific processing despite diverse inputs.
-
-\subsection{Cross-Domain Comparison (H7)}
-
-Direct comparison revealed a clear descriptive divergence in aggregate sparsity (Fig.~\ref{fig:cross}). Brain Gini, averaged over subjects and tasks, was approximately $2.5\times$ higher than mean MoE Gini ($0.443$ vs.\ $0.176$). Within-MoE expert utilization was close to uniform across input categories in all three architectures (category-level dominant-weight fraction $\approx 0.24$ against a uniform baseline of $\approx 0.14$). The structural-similarity correlation between brain and MoE routing matrices was weakly positive but did not reach significance ($r = +0.25$, $p = 0.089$). Table~\ref{tab:summary} summarizes all hypothesis-testing results.
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=\textwidth]{Picture4.pdf}
-\caption{Aggregate sparsity (Gini coefficient) compared across biological cortex and three MoE foundation models. \textbf{(A)} Density of per-subject-per-task brain Gini with MoE per-model Gini shown as vertical lines. \textbf{(B)} Brain Gini (mean $\pm$ SD across subjects $\times$ tasks) versus per-model MoE Gini. \textbf{(C)} Box-plus-scatter summary with Cohen's $d$ for the brain-vs-MoE difference. Brain-wide activation is approximately $2.5\times$ more aggregate-sparse than load-balanced expert utilization in contemporary MoE models.}
-\label{fig:cross}
-\end{figure*}
-
-\begin{table}[t]
-\caption{Hypothesis-testing summary. Brain H1, H3, H4 are BH-FDR-corrected across three primary tests; H3 uses the independence-safe subject-level LOO-r primary statistic, not the naive pairwise $t$ (which on the same data reports $p = 1.2 \times 10^{-17}$; see Sec.~III-C).}
+\begin{table*}[t]
+\caption{Summary of the brain-side hypotheses. $d$: high minus low efficiency, with 95\% CI. $p_{\text{FDR}}$: primary family \{H1, H3, H4\}; H2 is in the four-test sensitivity family. TOST: $p$ for equivalence to $|d| < 0.5$. $r_E$: Pearson correlation with the continuous efficiency score ($p_{\text{FDR}}$ across six measures; for H3 against the whole-sample LOO template). H3 uses the subject-level LOO statistic; the naive pairwise test on the same data gives $p = 1.0 \times 10^{-30}$.}
 \label{tab:summary}
 \centering
 \footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{@{}cp{3.2cm}lc@{}}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lllcccccc@{}}
 \toprule
-& \textbf{Hypothesis} & \textbf{Result} & \textbf{Key statistic} \\
+& \textbf{Primary outcome} & \textbf{Verdict} & $d$ [95\% CI] & $p$ & $p_{\text{FDR}}$ & TOST $p$ & $\mathrm{BF}_{10}$ & $r_E$ ($p_{\text{FDR}}$) \\
 \midrule
-H1 & Sparser activation in eff.\ brains & Trend (reversed)        & $d{=}{-}0.16$, $p_{\text{FDR}}{=}0.07$ \\
-H2 & Canonical task-network routing     & Not supp.\              & $0/7$ match at Yeo-7 \\
-H3 & Consistent inter-subject routing   & Borderline (LOO)        & $d{=}{+}0.40$, $p_{\text{FDR}}{=}0.07$ \\
-H4 & Modularity differs between groups  & Not supp.\              & $d{=}{-}0.05$, $p_{\text{FDR}}{=}0.80$ \\
-H5 & MoE aggregate sparsity${\approx}$brain & Not supp.\          & Gini${=}0.18$ vs $0.44$ \\
-H6 & Expert category specialization     & Not supp.\              & Spec.${=}0\%$ \\
-H7 & Cross-domain routing similarity    & Not supp.\              & $r{=}{+}0.25$, $p{=}0.09$ \\
+H1 & Composite sparsity (subject mean) & Not supported & $-0.26$ $[-0.66, +0.13]$ & 0.19 & 0.29 & 0.12 & 0.45 & $-0.26$ (0.026) \\
+H2 & Task selectivity $\overline{S_t}$ (Yeo-7) & Not supported & $+0.14$ $[-0.26, +0.53]$ & 0.50 & 0.50 & 0.036 & 0.26 & $-0.02$ (0.82) \\
+H3 & LOO routing consistency & \textbf{Supported} & $+0.52$ $[+0.12, +0.92]$ & 0.011 & \textbf{0.033} & 0.54 & 4.0 & $+0.36$ (0.001) \\
+H4 & Modularity $Q$ & Not supported & $+0.19$ $[-0.20, +0.59]$ & 0.34 & 0.34 & 0.064 & 0.32 & $+0.18$ (0.10) \\
 \bottomrule
 \end{tabular}
-\vspace{1pt}\\
-{\scriptsize No brain-side hypothesis crosses BH-FDR at $\alpha = 0.05$ across the H1/H3/H4 family. H1 has a reversed-direction trend; H3 has a positive-direction trend under a subject-level LOO-r statistic but $p_{\text{FDR}} = 0.07$.}
+\end{table*}
+
+\subsection{MoE Routing and the Cross-Domain Comparison}
+
+Pooled over layers and tokens, all three models use their experts almost uniformly (Table~\ref{tab:moe}): aggregate Gini $0.122$, $0.038$ and $0.247$ (mean $0.135$), against a cortical Gini of $0.445$ over 360 parcels, a ratio of about $3.3\times$. The difference is not an artifact of the number of units: cortical Gini on $k = 8$, 60 or 64 randomly chosen parcels, matching each model's expert count, is $0.39$, $0.44$ and $0.44$ (Fig.~\ref{fig:cross}). No expert specialized for a category; the dominant-category share stayed near the uniform $1/7$ (0.24--0.25 in all three models).
+
+Pooling, however, hides concentration. Within a single MoE layer expert use is much more concentrated than pooled use (mean per-layer Gini $0.29$, $0.17$ and $0.76$), because different layers favor different experts and the preferences cancel when layers are pooled; DeepSeek's single layers are more concentrated than cortex (Fig.~\ref{fig:cross}). At the token level routing is sparse by design, with $k/E$ between $6.7\%$ and $12.5\%$ of experts active per token. Which system is ``sparser'' therefore depends on the level of comparison, and the $3.3\times$ figure applies only to pooled expert use. We report no inferential test for the cortex--MoE difference: there are only three models, and the submitted Cohen's $d = 4.69$ treated 700 subject $\times$ task brain values and three model values as a two-sample comparison, which has no meaningful sampling unit.
+
+The submitted structural-similarity correlation ($r = +0.25$, $p = 0.089$) correlated, element by element, the flattened $z$-scored $7 \times 7$ brain task-by-network matrix with the first 49 entries of the $7 \times 8$ Switch category-by-expert matrix. Because expert indices are arbitrary, that number is not interpretable. We replace it with a permutation-invariant comparison of the $7 \times 7$ task-similarity matrix of cortex with each model's $7 \times 7$ category-similarity matrix (Mantel test~\cite{mantel1967detection} over all 5040 label orderings): Spearman $r = -0.18$, $-0.41$ and $-0.28$ (exact $p \ge 0.77$). Cortex and MoE routing share no detectable category structure.
+
+\begin{table}[t]
+\caption{MoE routing with the corrected router extraction. Pooled: Gini of expert use pooled over layers and tokens; per layer: mean [min, max] over layers; $E_{\text{eff}} = e^{H}$ of pooled use; Dom.: mean dominant-category share (uniform $1/7 \approx 0.143$).}
+\label{tab:moe}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Model} & $k/E$ & \textbf{Pooled} & \textbf{Per layer} & $E_{\text{eff}}$ & \textbf{Dom.} \\
+\midrule
+Switch-8 & 1/8 & 0.122 & 0.29 [0.16, 0.45] & 7.8/8 & 0.248 \\
+Qwen-MoE & 4/60 & 0.038 & 0.17 [0.12, 0.24] & 59.9/60 & 0.247 \\
+DeepSeek-16B & 6/64 & 0.247 & 0.76 [0.33, 0.86] & 57.9/64 & 0.244 \\
+\midrule
+Cortex (360 parcels) & --- & 0.445 & --- & --- & --- \\
+\bottomrule
+\end{tabular}
 \end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig_cross_domain.pdf}
+\caption{Cortex versus MoE concentration at matched unit counts. Squares: cortical Gini on $k$ randomly chosen parcels (mean and 95\% range over participants $\times$ tasks), with $k$ equal to each model's number of experts; dotted line: all 360 parcels. Diamonds: MoE expert use pooled over layers; open circles: single MoE layers.}
+\label{fig:cross}
+\end{figure}
 
 \section{Discussion}
 
-\subsection{Why No Candidate Property Crossed FDR}
+\subsection{What Distinguishes Efficient Routing}
 
-No candidate routing property crossed BH-FDR across the three primary hypotheses. The three directional patterns in the data together sharpen, rather than complicate, the null.
+Of four candidate signatures, only one survives joint FDR control: high-efficiency participants route task information across networks more like one another. The effect is moderate, is carried by both the group test and the continuous score, and holds under rank and permutation inference, which is what distinguishes it from the pairwise-correlation evidence often offered for such claims. Sparsity does not separate the groups, and the continuous analysis points away from the classical account: more efficient participants distribute activation slightly more broadly, in line with the reading of neural efficiency as targeted rather than minimal activation~\cite{haier1988cortical,neubauer2009intelligence}. Canonical task-network engagement is at chance even at 12 networks, and modularity is null across seeds and edge treatments, consistent with reports that modularity--cognition associations depend on partitioning and edge weighting~\cite{gallen2019brain,arnemann2015functional}. Consistency, not concentration, is where efficiency shows up in these data.
 
-First, activation sparsity is directionally reversed from the classical neural-efficiency prediction: the high-efficiency group engages tissue slightly \emph{less} sparsely, not more, on all three informative sparsity indices. One reading consistent with this direction is that under higher behavioral efficiency, task-relevant networks are more broadly recruited rather than more narrowly focused~\cite{neubauer2009intelligence}, consistent with a long-running debate in the intelligence literature on whether ``neural efficiency'' means less activation or more targeted activation~\cite{haier1988cortical,neubauer2009intelligence}. Our data are directionally consistent with the latter view, but the effect is sub-threshold under FDR and we treat it as a trend rather than a positive finding.
+\subsection{Implications for Routing-Level Biomarkers}
 
-Second, inter-subject routing consistency shows a borderline positive trend ($d = +0.40$, LOO $p = 0.049$, permutation $p = 0.055$) that does not cross FDR. The gap between the independence-safe and naive $p$-values (Sec.~III-C) is especially problematic in precision-neuroimaging settings, where the routing-consistency statistic is natural to propose (``do efficient participants route more similarly?'') but not naturally paired with the independent-samples tools most practitioners reach for. The true effect, if it exists, appears to be of a magnitude that requires a substantially larger sample to resolve reliably: the 95\% CI on the LOO-r group difference has its lower bound at $+0.001$.
-
-Third, the null on Louvain-based modularity is consistent with prior findings that modularity-cognition associations are sensitive to partitioning method, threshold, and edge weighting~\cite{gallen2019brain,arnemann2015functional}. The sub-threshold segregation effect ($d = -0.40$, nominally $p = 0.048$, but $p_{\text{FDR, within-family}} = 0.144$) is directionally consistent with more integrated community structure in high-efficiency participants and is the natural target for a higher-powered replication.
-
-\subsection{Implications for the Neural-Efficiency Biomarker Programme}
-
-Our results argue against treating any of the four standard routing-level metrics (activation sparsity, canonical task-network match, inter-subject routing consistency, modularity) as a translation-ready functional-connectivity biomarker of cognitive efficiency, at least in healthy young adults at the $N = 100$ scale typical of multi-task HCP work. We adopted the HCP-MMP1.0 Glasser-360 parcellation with a Cole-Anticevic~\cite{ji2019mapping} 12-network collapse to Yeo-7 labels, task-canonical GLM contrasts, and Louvain community detection, and still none of the four primary hypotheses survives FDR. This does not rule out biomarker signals from (i) per-parcel tests that avoid the Yeo-7 coarsening (H2 is particularly sensitive to network-granularity choices), (ii) dense resting-state timeseries FC rather than task-profile similarity (where 7-task profiles provide only seven observations per edge), (iii) longitudinal or clinical samples where between-group variance is larger than in HCP-YA, or (iv) substantially larger samples that can resolve the $d \approx +0.40$ routing-consistency trend observed here. These are the natural next steps for any routing-level biomarker claim to move from candidate to validated.
-
-We also recommend that any future report of ``higher routing consistency in high performers'' (or analogous claims in preclinical AD, schizophrenia~\cite{kim2010working,zhang2023dissociable,ewers2021segregation}, or rehabilitation cohorts) publish, alongside the headline statistic, a subject-level or permutation-based test that respects inter-subject dependence. Our data show that the $p$-value discrepancy between the naive and independence-safe tests can exceed 15 orders of magnitude on the same data.
+Routing consistency is a candidate marker, not a validated one. Its CI spans small to large effects, it comes from one cohort, and our efficiency score uses one of the seven tasks. A replication with about 60 participants per group would test the observed effect; ruling out a small one needs far more. Any such replication, and any claim of ``more consistent routing'' in preclinical Alzheimer's, schizophrenia~\cite{kim2010working,zhang2023dissociable,ewers2021segregation} or rehabilitation cohorts, should report a subject-level or permutation test: on our data the naive pairwise test overstates significance by about 28 orders of magnitude, and on the submitted first-level model it reported $p = 10^{-17}$ for an effect that subject-level inference placed at $p \approx 0.05$.
 
 \subsection{What the MoE Comparison Does and Does Not Show}
 
-At the architecture level, all three open-weight MoE models adopt load-balanced expert utilization (aggregate Gini $\sim 0.18$ versus brain Gini $\sim 0.44$; near-uniform category-level routing), consistent with the load-balancing training objective common to these architectures~\cite{fedus2022switch} and with MoE routers operating at the token rather than the semantic level. What our results do not support is the stronger claim that biological routing is the sparse, convergent ``gold standard'' that these models fail to match: in our data, the biological reference does not itself show an FDR-significant routing-level signature of efficient cognition. Cross-domain claims of the form ``models do not route like efficient brains'' should therefore be qualified by a caveat that the biological efficiency signature, operationalized via these four standard metrics on HCP-YA at $N = 100$, does not cross FDR in our sample.
+Pooled over layers, MoE expert use is near-uniform and category-blind, as expected from load-balancing objectives~\cite{fedus2022switch}, but single layers can be more concentrated than cortex. Moreover, our efficiency signal lies in the consistency of routing across individuals, which has no direct analogue in a single trained model; the cross-domain comparison therefore concerns concentration, not the property that distinguishes efficient brains here.
 
-\subsection{Limitations}
+\subsection{Limitations}\label{sec:limits}
 
-Several limitations shape the scope of our null results. (i) Community detection used Louvain modularity optimization on a task-activation-profile similarity matrix (seven observations per edge); this is not a conventional timeseries-derived functional connectivity matrix, and results from dense resting-state timeseries FC or a Leiden refinement may differ. (ii) The task-to-network canonical-match test (H2) uses a Cole-Anticevic to Yeo-7 collapse that merges, for example, Cingulo-Opercular, Language, and Ventral-Multimodal into a single VAN bin; H2 should be re-run at the 12-network Cole-Anticevic resolution before being treated as definitive. (iii) Behavioral performance measured in a single session does not separate state-level from trait-level efficiency; a test-retest-reliable efficiency score is the natural follow-up. (iv) The sample is drawn from a demographically narrow healthy young-adult cohort; extension to aging and clinical cohorts is the natural next step for any biomarker claim. (v) The correspondence between seven cognitive tasks and seven text input categories in the cross-domain MoE comparison is necessarily approximate. (vi) Newer MoE architectures with different training objectives may exhibit different routing patterns; our MoE results pertain to the current generation of open-weight foundation models rather than MoE designs in principle.
-
-The methodological pitfall identified in Sec.~III-C (the pairwise-correlation independence violation) is a property of the statistical procedure and therefore unaffected by any of the above caveats.
+(i) Family structure is not modelled; HCP-YA siblings and twins may make participants non-independent, which could inflate the H3 evidence. Consistency also depends on head motion, which we controlled for statistically but not by design. (ii) The data were not ICA-FIX denoised, and no motion threshold was applied, although motion was low and balanced across groups. (iii) The efficiency score comes from one session and one of the seven tasks; its run-to-run reliability is $0.80$. (iv) H4 uses task-profile similarity with seven observations per edge, not time-series FC, and results may differ with Leiden refinement~\cite{traag2019louvain}. (v) The task--category mapping (Table~\ref{tab:mapping}) is approximate, and the MoE results apply to the three examined architectures. (vi) The sample is a narrow healthy young-adult cohort. The pairwise-correlation pitfall is a property of the statistical procedure and does not depend on these.
 
 \section{Conclusion}
 
-In 100 HCP Young Adult participants, under a joint BH-FDR test of four pre-specified routing-level candidate signatures of cognitive efficiency (sparsity, task-selective network engagement, inter-subject routing consistency, modularity), no candidate property crosses FDR. Sparsity is directionally reversed, routing consistency is a borderline positive trend ($p_{\text{raw}} = 0.049$) but does not cross FDR, and the other two are null. We identify a specific inference pitfall, the conventional pairwise-correlation $t$-test, which on these data inflates the routing-consistency $p$-value by roughly 16 orders of magnitude relative to a subject-level statistic, and recommend that individual-differences FC studies use subject-level or permutation inference for inter-subject convergence. A parallel analysis of three MoE foundation models confirms that contemporary artificial routing is less aggregate-sparse than biological cortex and uniformly load-balanced. Routing-level functional-connectivity biomarkers of cognitive efficiency, operationalized through these four standard metrics, are not supported at the HCP-YA scale without independent replication.
+In 100 HCP young adults, joint FDR-controlled testing of four routing-level signatures of cognitive efficiency supports one: high-efficiency participants route task information more consistently with one another ($d = +0.52$, $p_{\text{FDR}} = 0.033$), a result that holds under permutation, rank, continuous-score and Bayesian analysis. Sparsity, canonical task-network engagement and modularity are not supported. The conventional pairwise-correlation $t$-test would have reported the consistency effect at $p = 10^{-30}$; subject-level and permutation inference put it at $p \approx 0.01$--$0.02$, and on a flawed first-level model the naive test was just as confident while correct inference was not. Cortex is more concentrated than pooled MoE expert use, but not than every single MoE layer. Routing consistency is a candidate marker of efficient cognition that now needs independent replication with subject-level inference.
 
-\section*{Code Availability}
-Upon acceptance, the full analysis code, intermediate activation matrices, per-subject routing profiles, and all result JSONs will be released at a public repository with a permanent Zenodo DOI.
+\section*{Acknowledgment}
+Data were provided by the Human Connectome Project, WU-Minn Consortium (Principal Investigators: David Van Essen and Kamil Ugurbil; 1U54MH091657) funded by the 16 NIH Institutes and Centers that support the NIH Blueprint for Neuroscience Research, and by the McDonnell Center for Systems Neuroscience at Washington University. Claude (Anthropic) was used to assist with analysis code, manuscript revision and language editing; the authors verified all content and take full responsibility for it.
+
+\section*{Code and Data Availability}
+Analysis code, intermediate activation matrices, per-subject routing profiles and all result files will be made publicly available with a permanent archive DOI. HCP data are available from the Human Connectome Project under its open-access terms.
 
 \bibliographystyle{IEEEtran}
 \bibliography{refs}

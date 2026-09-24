@@ -21,3 +21,9 @@ __pycache__/
 *.bcf
 *.synctex.gz
 papers/conference_BIBM2026/*.tar.gz
+
+# Internal working notes: kept on disk, never published
+SESSION_LOG.md
+docs/superpowers/
+papers/conference_BIBM2026/REPOSITION_DRAFT.md
+*.bak

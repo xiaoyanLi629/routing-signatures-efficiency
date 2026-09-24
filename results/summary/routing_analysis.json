@@ -1,0 +1,109 @@
+{
+  "selectivity": {
+    "WM": 0.084672139270493,
+    "MOTOR": 0.055161917190469145,
+    "LANGUAGE": 0.10784239272631468,
+    "SOCIAL": 0.0828985105707093,
+    "RELATIONAL": 0.15785653381166043,
+    "EMOTION": 0.09874763745957982,
+    "GAMBLING": 0.1551629120658541
+  },
+  "entropy_selectivity": {
+    "WM": 0.084672139270493,
+    "MOTOR": 0.055161917190469145,
+    "LANGUAGE": 0.10784239272631468,
+    "SOCIAL": 0.0828985105707093,
+    "RELATIONAL": 0.15785653381166043,
+    "EMOTION": 0.09874763745957982,
+    "GAMBLING": 0.1551629120658541
+  },
+  "dominant_networks": {
+    "WM": "FPN",
+    "MOTOR": "VAN",
+    "LANGUAGE": "DMN",
+    "SOCIAL": "DAN",
+    "RELATIONAL": "FPN",
+    "EMOTION": "VIS",
+    "GAMBLING": "LIM"
+  },
+  "expected_match": {
+    "WM": {
+      "expected": [
+        "FPN",
+        "DAN"
+      ],
+      "actual": "FPN",
+      "match": true
+    },
+    "MOTOR": {
+      "expected": [
+        "SMN"
+      ],
+      "actual": "VAN",
+      "match": false
+    },
+    "LANGUAGE": {
+      "expected": [
+        "FPN",
+        "VAN"
+      ],
+      "actual": "DMN",
+      "match": false
+    },
+    "SOCIAL": {
+      "expected": [
+        "DMN"
+      ],
+      "actual": "DAN",
+      "match": false
+    },
+    "RELATIONAL": {
+      "expected": [
+        "FPN",
+        "DAN"
+      ],
+      "actual": "FPN",
+      "match": true
+    },
+    "EMOTION": {
+      "expected": [
+        "LIM"
+      ],
+      "actual": "VIS",
+      "match": false
+    },
+    "GAMBLING": {
+      "expected": [
+        "FPN"
+      ],
+      "actual": "LIM",
+      "match": false
+    }
+  },
+  "consistency": {
+    "high": 0.4723057405904929,
+    "low": 0.4037960728424926
+  },
+  "hypothesis_H2": {
+    "description": "Different tasks activate different specialized network modules",
+    "mean_selectivity_entropy": 0.1060488632992972,
+    "mean_selectivity_maxmean_DEPRECATED": 0.9931121221913332,
+    "expected_network_matches": 2,
+    "total_tasks": 7,
+    "match_rate": 0.2857142857142857,
+    "supported": false,
+    "interpretation": "NOT SUPPORTED",
+    "note": "Entropy-based selectivity mean=0.106 (0 = uniform across networks, 1 = single network). 2/7 tasks matched canonically predicted networks. (The (max-mean)/max index saturates near 1 on 7-element vectors and is reported descriptively only: 0.993)."
+  },
+  "hypothesis_H3": {
+    "description": "High-efficiency individuals show more consistent routing patterns",
+    "high_consistency": 0.4723057405904929,
+    "low_consistency": 0.4037960728424926,
+    "t_statistic": 11.67962676747531,
+    "p_value": 1.0403052405703314e-30,
+    "cohens_d": 0.472120929706785,
+    "supported": true,
+    "significant": true,
+    "interpretation": "SUPPORTED"
+  }
+}

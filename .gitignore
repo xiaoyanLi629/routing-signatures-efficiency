@@ -1,0 +1,10 @@
+# HCP data and model weights are never versioned
+data/
+models/
+# Pipeline outputs (the paper's group-level numbers live in results/summary/)
+results/run_*/
+logs/
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store

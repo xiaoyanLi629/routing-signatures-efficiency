@@ -1,0 +1,62 @@
+{
+  "comparison": {
+    "modularity_Q": {
+      "high_mean": 0.11112336984040865,
+      "high_std": 0.006704177713961556,
+      "low_mean": 0.10966478521001935,
+      "low_std": 0.008220670018574067,
+      "t_statistic": 0.9625080323954218,
+      "p_value": 0.33816342917029274,
+      "cohens_d": 0.19445598761523541,
+      "significant": false,
+      "p_value_fdr": 0.4971430514635512,
+      "significant_fdr": false,
+      "fdr_method": "fdr_bh",
+      "fdr_family_size": 3
+    },
+    "segregation": {
+      "high_mean": 0.27397332901106447,
+      "high_std": 0.016443065209808132,
+      "low_mean": 0.26768688026750864,
+      "low_std": 0.019223407679660905,
+      "t_statistic": 1.7395730953921855,
+      "p_value": 0.08507366980687958,
+      "cohens_d": 0.35144683774899643,
+      "significant": false,
+      "p_value_fdr": 0.25522100942063874,
+      "significant_fdr": false,
+      "fdr_method": "fdr_bh",
+      "fdr_family_size": 3
+    },
+    "mean_participation": {
+      "high_mean": 0.7020237227996412,
+      "high_std": 0.04599651653227207,
+      "low_mean": 0.7086208050776917,
+      "low_std": 0.04975487376620182,
+      "t_statistic": -0.6815309105961784,
+      "p_value": 0.4971430514635512,
+      "cohens_d": -0.13769003670594296,
+      "significant": false,
+      "p_value_fdr": 0.4971430514635512,
+      "significant_fdr": false,
+      "fdr_method": "fdr_bh",
+      "fdr_family_size": 3
+    }
+  },
+  "hypothesis_H4": {
+    "description": "High-efficiency individuals have clearer functional module boundaries",
+    "modularity_difference": 0.19445598761523541,
+    "segregation_difference": 0.35144683774899643,
+    "participation_difference": -0.13769003670594296,
+    "supported": false,
+    "significant": false,
+    "interpretation": "TREND",
+    "note": "Modularity Q: d=0.19, p=0.338 (FDR 0.497, n.s.); Segregation: p=0.085 (FDR 0.255, n.s.); Participation: p=0.497 (FDR 0.497, n.s.). "
+  },
+  "summary": {
+    "mean_modularity": 0.11039407752521396,
+    "mean_segregation": 0.2708301046392866,
+    "high_group_modularity": 0.11112336984040865,
+    "low_group_modularity": 0.10966478521001935
+  }
+}

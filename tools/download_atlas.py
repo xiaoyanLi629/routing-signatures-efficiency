@@ -24,6 +24,11 @@ FILES = {
     "CortexSubcortex_ColeAnticevic_NetPartition_wSubcorGSR_netassignments_LR.dlabel.nii":
         "https://github.com/ColeLab/ColeAnticevicNetPartition/raw/master/"
         "CortexSubcortex_ColeAnticevic_NetPartition_wSubcorGSR_netassignments_LR.dlabel.nii",
+    # Volumetric Glasser-360 in MNI152 (PennLINC/xcpEngine), used only for the
+    # glass-brain figures; its parcel order is R then L (see build_vertical_glassbrain).
+    "glasser360MNI.nii.gz":
+        "https://raw.githubusercontent.com/PennLINC/xcpEngine/master/"
+        "atlas/glasser360/glasser360MNI.nii.gz",
 }
 
 

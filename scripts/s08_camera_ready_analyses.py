@@ -74,9 +74,10 @@ OUT = RUN / "camera_ready"
 OUT.mkdir(parents=True, exist_ok=True)
 DATA_ROOT = config.DATA_ROOT
 # Corrected MoE router extraction (sister project, commits 55c0cf0 / 8b0e77b):
-# same three checkpoints, same text samples, fixed hook classification.
-MOE_SOURCE = Path("/root/autodl-fs/TST_Journal_2026/Routing_MoE_TST/results/"
-                  "run_20260419_182908")
+# same three checkpoints, same text samples, fixed hook classification. The
+# repository ships these outputs in results/moe_corrected/; MOE_SOURCE
+# overrides the location.
+MOE_SOURCE = Path(os.environ.get("MOE_SOURCE", PROJECT_DIR / "results" / "moe_corrected"))
 MOE_MODELS = {"switch_8": "Switch-8", "qwen_moe": "Qwen-MoE", "deepseek_16b": "DeepSeek-16B"}
 CATS = ["scientific", "social", "emotional", "procedural", "narrative",
         "mathematical", "risk_decision"]

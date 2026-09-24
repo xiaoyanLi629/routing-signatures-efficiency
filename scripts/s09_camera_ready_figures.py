@@ -29,8 +29,8 @@ PROJECT_DIR = Path(__file__).resolve().parent.parent
 OUT = PROJECT_DIR / "results" / os.environ.get("CR_RUN", "run_20260419_182908") / "camera_ready"
 R = json.load(open(OUT / "camera_ready_analyses.json"))
 perm = np.load(OUT / "perm_null.npy")
-LAYERWISE = Path("/root/autodl-fs/TST_Journal_2026/Routing_MoE_TST/results/"
-                 "run_20260419_182908/moe_analysis/layerwise_routing.json")
+LAYERWISE = Path(os.environ.get("MOE_SOURCE", PROJECT_DIR / "results" / "moe_corrected")) \
+    / "moe_analysis" / "layerwise_routing.json"
 
 plt.rcParams.update({"font.family": "serif", "font.serif": ["Times New Roman", "DejaVu Serif"],
                      "font.size": 8, "axes.titlesize": 8, "axes.labelsize": 8,

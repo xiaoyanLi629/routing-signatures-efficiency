@@ -18,7 +18,7 @@
 
 ## 数据
 
-HCP Young Adult，100 个被试（一份按 ID 升序排列、7 个任务 LR/RL 齐全的名单中的前 100 人），7 个任务 fMRI 范式。数据在 `data/`（符号链接到共享的 `../../hcp_data/`，只读）。使用的是 MSMAll 最小预处理数据（未做 ICA-FIX），入组时没有做头动筛选（事后核查：所有 run 的平均相对位移都小于 0.5 mm）。
+HCP Young Adult，100 个被试（一份按 ID 升序排列、7 个任务 LR/RL 齐全的名单中的前 100 人），7 个任务 fMRI 范式。原始数据原先通过 `data -> ../../hcp_data` 链接到共享目录，该目录已于 2026-09-24 删除；现在 `data/` 只保留 `_atlas/` 图谱文件（Glasser-360、Cole-Anticevic、MNI 体积图谱），重跑一级 GLM 前需要先用 `tools/download_hcp.py` 重新下载 HCP 数据。组级与被试级中间结果都在 `results/`，不依赖原始数据。使用的是 MSMAll 最小预处理数据（未做 ICA-FIX），入组时没有做头动筛选（事后核查：所有 run 的平均相对位移都小于 0.5 mm）。
 
 - HCP-MMP1.0 Glasser-360 分区（Cole-Anticevic CIFTI labels）
 - Cole-Anticevic 12 网络划分，收敛为 7 个 Yeo-like 网络（VIS, SMN, DAN, VAN, LIM, FPN, DMN）
@@ -71,4 +71,4 @@ python run_full_pipeline.py --list    # 查看 stage 列表
 ## 与另一个项目的关系
 
 同一批 HCP 数据还支撑着另一篇独立的论文——`../../TST_Journal_2026/Routing_MoE_TST/`（清华学报 TST，
-大脑 vs MoE 基础模型的跨域路由对比）。两个项目**代码、结果、稿件完全独立**，只共享只读的 `../../hcp_data/` 与 `../../moe_models/`。
+大脑 vs MoE 基础模型的跨域路由对比）。两个项目**代码、结果、稿件完全独立**，原先共享 `../../hcp_data/` 与 `../../moe_models/`，两者已于 2026-09-24 删除。

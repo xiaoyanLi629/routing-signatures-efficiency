@@ -15,35 +15,67 @@
 
 \graphicspath{{figures/}}
 
+% Forces a new, centered row of author blocks (IEEEtran otherwise left-aligns a short last row).
+\makeatletter
+\newcommand{\linebreakand}{\end{@IEEEauthorhalign}\hfill\mbox{}\par\mbox{}\hfill\begin{@IEEEauthorhalign}}
+\makeatother
+
 \begin{document}
 
 \title{Routing-Level Signatures of Cognitive Efficiency: Only Inter-Subject Routing Consistency Survives FDR, with a Pairwise-Correlation Caveat}
 
 % Author names and order must match the submission exactly (BIBM camera-ready rule).
-\author{
-\IEEEauthorblockN{Xiaoyan Li\IEEEauthorrefmark{1},
-Cuicui Jiang\IEEEauthorrefmark{2},
-Jiaoping Chen\IEEEauthorrefmark{3},
-Yujia Du\IEEEauthorrefmark{4},
-Jiaxuan Wei\IEEEauthorrefmark{5},
-Xingyue Liu\IEEEauthorrefmark{5},
-and Rumei Yang\IEEEauthorrefmark{6}}
-\IEEEauthorblockA{\IEEEauthorrefmark{1}Department of Computational Mathematics, Science and Engineering, Michigan State University, East Lansing, MI, USA}
-\IEEEauthorblockA{\IEEEauthorrefmark{2}College of Computer Science, Inner Mongolia University, Hohhot, China}
-\IEEEauthorblockA{\IEEEauthorrefmark{3}Merrick School of Business, University of Baltimore, Baltimore, MD, USA}
-\IEEEauthorblockA{\IEEEauthorrefmark{4}Suzhou MetaCortex Intelligence Technology Co., Ltd., Suzhou, China}
-\IEEEauthorblockA{\IEEEauthorrefmark{5}School of Artificial Intelligence, Taiyuan University of Technology, Jinzhong, China}
-\IEEEauthorblockA{\IEEEauthorrefmark{6}School of Nursing, Nanjing Medical University, Nanjing, China}
-\IEEEauthorblockA{lixiaoy5@msu.edu, jiangcuicui@mail.imu.edu.cn, jchen@ubalt.edu, saroyi@163.com,\\
-2023002323@link.tyut.edu.cn, 2023002320@link.tyut.edu.cn, rumeiyang@njmu.edu.cn}
+\author{%
+\IEEEauthorblockN{Xiaoyan Li}
+\IEEEauthorblockA{\textit{Dept.\ of Computational Mathematics,} \\
+\textit{Science and Engineering} \\
+\textit{Michigan State University}\\
+East Lansing, MI, USA \\
+lixiaoy5@msu.edu}
+\and
+\IEEEauthorblockN{Cuicui Jiang}
+\IEEEauthorblockA{\textit{College of Computer Science} \\
+\textit{Inner Mongolia University}\\
+Hohhot, China \\
+jiangcuicui@mail.imu.edu.cn}
+\and
+\IEEEauthorblockN{Jiaoping Chen}
+\IEEEauthorblockA{\textit{Merrick School of Business} \\
+\textit{University of Baltimore}\\
+Baltimore, MD, USA \\
+jchen@ubalt.edu}
+\linebreakand
+\IEEEauthorblockN{Yujia Du}
+\IEEEauthorblockA{\textit{Suzhou MetaCortex Intelligence} \\
+\textit{Technology Co., Ltd.}\\
+Suzhou, China \\
+saroyi@163.com}
+\and
+\IEEEauthorblockN{Jiaxuan Wei}
+\IEEEauthorblockA{\textit{School of Artificial Intelligence} \\
+\textit{Taiyuan University of Technology}\\
+Jinzhong, China \\
+2023002323@link.tyut.edu.cn}
+\and
+\IEEEauthorblockN{Xingyue Liu}
+\IEEEauthorblockA{\textit{School of Artificial Intelligence} \\
+\textit{Taiyuan University of Technology}\\
+Jinzhong, China \\
+2023002320@link.tyut.edu.cn}
+\linebreakand
+\IEEEauthorblockN{Rumei Yang\textsuperscript{*}}
+\IEEEauthorblockA{\textit{School of Nursing} \\
+\textit{Nanjing Medical University}\\
+Nanjing, China \\
+rumeiyang@njmu.edu.cn}
 }
 
 \maketitle
 % Corresponding author as an unnumbered footnote at the bottom of the first column.
-\begingroup\renewcommand\thefootnote{}\footnotetext{Corresponding author: Rumei Yang (rumeiyang@njmu.edu.cn).}\endgroup
+\begingroup\renewcommand\thefootnote{}\footnotetext{\textsuperscript{*}Corresponding author: Rumei Yang (rumeiyang@njmu.edu.cn).}\endgroup
 
 \begin{abstract}
-We jointly test four pre-specified routing-level candidate signatures of cognitive efficiency (activation-distribution sparsity, canonical task-network engagement, inter-subject routing consistency, and modularity) in 100 Human Connectome Project Young Adult participants across all seven task-fMRI paradigms, with efficiency groups defined by working-memory behavior and Benjamini--Hochberg (BH) FDR control. Only inter-subject routing consistency survives FDR: under a subject-level leave-one-out (LOO) statistic, high-efficiency participants route more like one another ($d = +0.52$, 95\% CI $[+0.12, +0.92]$, $p = 0.011$, $p_{\text{FDR}} = 0.033$; label permutation $p = 0.018$; $\mathrm{BF}_{10} = 4.0$), and consistency correlates with the continuous efficiency score ($r = 0.36$, $p = 0.0002$). Sparsity ($d = -0.26$), task-network engagement (2/7 canonical matches, at chance) and modularity ($d = +0.19$) are not supported. On the same consistency data, the conventional within-group pairwise-correlation $t$-test reports $p = 1.0 \times 10^{-30}$, overstating significance by about 28 orders of magnitude because it treats 2450 correlated pairs as independent; we show the inflation directly and give a drop-in subject-level replacement. A cross-domain comparison with three Mixture-of-Experts (MoE) language models finds cortex about $3.3\times$ more concentrated than MoE expert use pooled over layers, but single MoE layers can be far more concentrated, so that comparison depends on the level of pooling. Routing consistency is a candidate marker of efficient cognition that now needs independent replication.
+We jointly test four pre-specified routing-level candidate signatures of cognitive efficiency (activation-distribution sparsity, canonical task-network engagement, inter-subject routing consistency, and modularity) in 100 Human Connectome Project Young Adult participants across all seven task-fMRI paradigms, with efficiency groups defined by working-memory behavior and Benjamini--Hochberg (BH) FDR control. Only inter-subject routing consistency survives FDR: under a subject-level leave-one-out (LOO) statistic, high-efficiency participants route more like one another ($d = +0.52$, 95\% CI $[+0.12, +0.92]$, $p = 0.011$, $p_{\text{FDR}} = 0.033$; label permutation $p = 0.018$; $\mathrm{BF}_{10} = 4.0$), and consistency correlates with the continuous efficiency score ($r = 0.36$, $p = 0.0002$). The effect, however, is carried by the Working Memory task that also defines the efficiency score; without it, $d = +0.19$ ($p = 0.34$). Sparsity ($d = -0.26$), task-network engagement (2/7 canonical matches, at chance) and modularity ($d = +0.19$) are not supported. On the same consistency data, the conventional within-group pairwise-correlation $t$-test reports $p = 1.0 \times 10^{-30}$, overstating significance by about 28 orders of magnitude because it treats 2450 correlated pairs as independent; we show the inflation directly and give a drop-in subject-level replacement. A cross-domain comparison with three Mixture-of-Experts (MoE) language models finds cortex about $3.3\times$ more concentrated than MoE expert use pooled over layers, but single MoE layers can be far more concentrated, so that comparison depends on the level of pooling. Routing consistency is at most a candidate marker of efficient cognition; testing it requires an efficiency measure that is independent of the imaged tasks.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -58,7 +90,7 @@ The neural efficiency hypothesis proposes that more capable brains accomplish ta
 
 We also compare cortex with three Mixture-of-Experts (MoE) language models~\cite{shazeer2017outrageously,fedus2022switch}, which obtain computational efficiency by sparse expert routing~\cite{bommasani2021opportunities}. Earlier brain--network comparisons concern representational similarity~\cite{yamins2016using,kriegeskorte2015deep,schrimpf2021neural} rather than routing.
 
-The paper makes three contributions. (1) In 100 HCP participants, with the HCP-MMP1.0 parcellation, task-canonical GLM contrasts, Louvain community detection and BH-FDR-controlled joint testing, one of the four candidates, inter-subject routing consistency, survives FDR, and permutation, rank, continuous-score and Bayesian analyses agree; sparsity, canonical task-network engagement and modularity are not supported. (2) We quantify an inference pitfall that the consistency analysis invites: the within-group pairwise-correlation $t$-test treats $n(n-1)/2$ non-independent pairs as independent and, on our data, overstates significance by about 28 orders of magnitude relative to subject-level and permutation inference (Fig.~\ref{fig:null}); we give the subject-level statistic as a drop-in replacement. (3) Cortex is more concentrated than MoE expert use pooled over layers, but single MoE layers can be more concentrated than cortex, so cross-domain efficiency comparisons must state the level of pooling.
+The paper makes three contributions. (1) In 100 HCP participants, with the HCP-MMP1.0 parcellation, task-canonical GLM contrasts, Louvain community detection and BH-FDR-controlled joint testing, one of the four candidates, inter-subject routing consistency, survives FDR, and permutation, rank, continuous-score and Bayesian analyses agree, although the effect is carried by the Working Memory task on which efficiency is defined; sparsity, canonical task-network engagement and modularity are not supported. (2) We quantify an inference pitfall that the consistency analysis invites: the within-group pairwise-correlation $t$-test treats $n(n-1)/2$ non-independent pairs as independent and, on our data, overstates significance by about 28 orders of magnitude relative to subject-level and permutation inference (Fig.~\ref{fig:null}); we give the subject-level statistic as a drop-in replacement. (3) Cortex is more concentrated than MoE expert use pooled over layers, but single MoE layers can be more concentrated than cortex, so cross-domain efficiency comparisons must state the level of pooling.
 
 \section{Methods}
 
@@ -156,11 +188,13 @@ Parcel-level maps show the expected anatomy (Fig.~\ref{fig:glassbrain}): WM and 
 \label{fig:glassbrain}
 \end{figure*}
 
-\subsection{H3: Inter-Subject Routing Consistency}
+\subsection{H3: Inter-Subject Routing Consistency}\label{sec:h3}
 
 \emph{Primary.} Subject-level LOO correlations were $r = 0.680$ (high) and $0.626$ (low): $d = +0.52$, 95\% CI $[+0.12, +0.92]$, Welch $t = 2.59$, $p = 0.011$; Mann--Whitney $p = 0.013$; bootstrap CI on the difference $[+0.014, +0.092]$. The label-permutation test, which needs no independence assumption, agrees ($\Delta r = +0.069$, null SD $0.029$, $p = 0.018$). H3 survives the primary BH-FDR family ($p_{\text{FDR}} = 0.033$) and the four-test sensitivity family ($p_{\text{FDR}} = 0.044$), and the Bayes factor gives moderate evidence for a difference ($\mathrm{BF}_{10} = 4.0$). Consistency is lower in participants who move more ($r = -0.28$ with mean relative RMS), but motion does not differ between groups, and with motion as a covariate the group effect is unchanged ($p = 0.013$). The CI is wide: effects from $d \approx 0.1$ to $0.9$ are compatible with the data, and resolving the lower end would need about 1100 participants per group, whereas replicating $d = 0.52$ at 80\% power needs about 60.
 
 \emph{The pairwise-correlation caveat.} Pooling the $1225$ within-group pairwise correlations per group into an independent-samples $t$-test gives, on the same data, $t = 11.68$ and $p = 1.0 \times 10^{-30}$ with an apparent $d = +0.47$. The test inflates the effective sample size, from 100 participants to about 2450 pairs, and overstates significance by about 28 orders of magnitude. Fig.~\ref{fig:null} shows why: the null distribution implied by the naive test is about $4.9\times$ narrower than the permutation null. Here the conclusion survives correct inference, but only just; on the submitted first-level model the same naive test gave $p = 10^{-17}$ while subject-level inference gave $p = 0.049$ and permutation $p = 0.055$, so the naive test would report an overwhelming effect in either case, regardless of whether a correct test finds one.
+
+\emph{Dependence on the Working Memory task.} The efficiency score is computed from Working Memory performance, and Working Memory is also one of the seven tasks in the routing profile. Removing it and recomputing H3 on the remaining six tasks reduces the group effect to $d = +0.19$ ($p = 0.34$; permutation $p = 0.38$), whereas removing any one of the other six tasks leaves it in place ($d$ from $+0.44$ to $+0.66$, all Welch $p \le 0.032$ and permutation $p \le 0.046$). The Working Memory row alone separates the groups ($d = +0.74$, $p = 0.0004$). The continuous association behaves the same way: $r = 0.36$ with all seven tasks and $r = 0.15$ (95\% CI $[-0.05, 0.34]$, $p = 0.13$) without Working Memory. The consistency effect is therefore carried by the task that also defines efficiency: participants who perform the 2-back task well show working-memory activation closer to the group pattern, and the other six tasks add no detectable group difference.
 
 \begin{figure}[t]
 \centering
@@ -185,7 +219,7 @@ Louvain found 3--6 communities per participant (median 4). Modularity did not di
 With the continuous efficiency score in place of the median split (Table~\ref{tab:summary}), routing consistency, computed against the whole-sample LOO template, correlated positively with efficiency ($r = 0.36$, 95\% CI $[0.18, 0.52]$, $p = 0.0002$, $p_{\text{FDR}} = 0.001$; permutation of $E_i$: $p = 0.0002$; partial $r = 0.34$ controlling for motion). Two secondary associations also crossed FDR within this family: composite sparsity ($r = -0.26$, $p_{\text{FDR}} = 0.026$) and participation ($r = -0.24$, $p_{\text{FDR}} = 0.037$), both negative, i.e.\ more efficient participants distribute activation slightly more broadly and have slightly less cross-community integration; neither was detected by the pre-specified group tests. Modularity ($r = 0.18$) and selectivity ($r = -0.02$) did not.
 
 \begin{table*}[t]
-\caption{Summary of the brain-side hypotheses. $d$: high minus low efficiency, with 95\% CI. $p_{\text{FDR}}$: primary family \{H1, H3, H4\}; H2 is in the four-test sensitivity family. TOST: $p$ for equivalence to $|d| < 0.5$. $r_E$: Pearson correlation with the continuous efficiency score ($p_{\text{FDR}}$ across six measures; for H3 against the whole-sample LOO template). H3 uses the subject-level LOO statistic; the naive pairwise test on the same data gives $p = 1.0 \times 10^{-30}$.}
+\caption{Summary of the brain-side hypotheses. $d$: high minus low efficiency, with 95\% CI. $p_{\text{FDR}}$: primary family \{H1, H3, H4\}; H2 is in the four-test sensitivity family. TOST: $p$ for equivalence to $|d| < 0.5$. $r_E$: Pearson correlation with the continuous efficiency score ($p_{\text{FDR}}$ across six measures; for H3 against the whole-sample LOO template). H3 uses the subject-level LOO statistic; the naive pairwise test on the same data gives $p = 1.0 \times 10^{-30}$. H3 does not survive removing the Working Memory task (Sec.~\ref{sec:h3}).}
 \label{tab:summary}
 \centering
 \footnotesize
@@ -229,22 +263,22 @@ Cortex (360 parcels) & --- & 0.445 & --- & --- & --- \\
 \end{tabular}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{fig_cross_domain.pdf}
+\includegraphics[width=\textwidth]{fig_cross_domain.pdf}
 \caption{Cortex versus MoE concentration at matched unit counts. Squares: cortical Gini on $k$ randomly chosen parcels (mean and 95\% range over participants $\times$ tasks), with $k$ equal to each model's number of experts; dotted line: all 360 parcels. Diamonds: MoE expert use pooled over layers; open circles: single MoE layers.}
 \label{fig:cross}
-\end{figure}
+\end{figure*}
 
 \section{Discussion}
 
 \subsection{What Distinguishes Efficient Routing}
 
-Of four candidate signatures, only one survives joint FDR control: high-efficiency participants route task information across networks more like one another. The effect is moderate, is carried by both the group test and the continuous score, and holds under rank and permutation inference, which is what distinguishes it from the pairwise-correlation evidence often offered for such claims. Sparsity does not separate the groups, and the continuous analysis points away from the classical account: more efficient participants distribute activation slightly more broadly, in line with the reading of neural efficiency as targeted rather than minimal activation~\cite{haier1988cortical,neubauer2009intelligence}. Canonical task-network engagement is at chance even at 12 networks, and modularity is null across seeds and edge treatments, consistent with reports that modularity--cognition associations depend on partitioning and edge weighting~\cite{gallen2019brain,arnemann2015functional}. Consistency, not concentration, is where efficiency shows up in these data.
+Of four candidate signatures, only one survives joint FDR control: high-efficiency participants route task information across networks more like one another. The effect is moderate, is carried by both the group test and the continuous score, and holds under rank and permutation inference, which is what distinguishes it from the pairwise-correlation evidence often offered for such claims. Sparsity does not separate the groups, and the continuous analysis points away from the classical account: more efficient participants distribute activation slightly more broadly, in line with the reading of neural efficiency as targeted rather than minimal activation~\cite{haier1988cortical,neubauer2009intelligence}. Canonical task-network engagement is at chance even at 12 networks, and modularity is null across seeds and edge treatments, consistent with reports that modularity--cognition associations depend on partitioning and edge weighting~\cite{gallen2019brain,arnemann2015functional}. In these data efficiency shows up in consistency, not concentration, but the consistency is task-specific. A plausible reading is that good 2-back performers engage the canonical working-memory circuitry more reliably, so their WM maps converge on the group pattern; this links performance to the typicality of activation within one task and is not evidence that efficient individuals route information more consistently across the task battery.
 
 \subsection{Implications for Routing-Level Biomarkers}
 
-Routing consistency is a candidate marker, not a validated one. Its CI spans small to large effects, it comes from one cohort, and our efficiency score uses one of the seven tasks. A replication with about 60 participants per group would test the observed effect; ruling out a small one needs far more. Any such replication, and any claim of ``more consistent routing'' in preclinical Alzheimer's, schizophrenia~\cite{kim2010working,zhang2023dissociable,ewers2021segregation} or rehabilitation cohorts, should report a subject-level or permutation test: on our data the naive pairwise test overstates significance by about 28 orders of magnitude, and on the submitted first-level model it reported $p = 10^{-17}$ for an effect that subject-level inference placed at $p \approx 0.05$.
+Routing consistency is a candidate marker, not a validated one. Its CI spans small to large effects, it comes from one cohort, and it disappears when the task that defines efficiency is removed. A replication should define efficiency outside the imaged battery, or hold the defining task out of the routing profile; with about 60 participants per group it would test the observed effect, while ruling out a small one needs far more. Any such replication, and any claim of ``more consistent routing'' in preclinical Alzheimer's, schizophrenia~\cite{kim2010working,zhang2023dissociable,ewers2021segregation} or rehabilitation cohorts, should report a subject-level or permutation test: on our data the naive pairwise test overstates significance by about 28 orders of magnitude, and on the submitted first-level model it reported $p = 10^{-17}$ for an effect that subject-level inference placed at $p \approx 0.05$.
 
 \subsection{What the MoE Comparison Does and Does Not Show}
 
@@ -252,11 +286,11 @@ Pooled over layers, MoE expert use is near-uniform and category-blind, as expect
 
 \subsection{Limitations}\label{sec:limits}
 
-(i) Family structure is not modelled; HCP-YA siblings and twins may make participants non-independent, which could inflate the H3 evidence. Consistency also depends on head motion, which we controlled for statistically but not by design. (ii) The data were not ICA-FIX denoised, and no motion threshold was applied, although motion was low and balanced across groups. (iii) The efficiency score comes from one session and one of the seven tasks; its run-to-run reliability is $0.80$. (iv) H4 uses task-profile similarity with seven observations per edge, not time-series FC, and results may differ with Leiden refinement~\cite{traag2019louvain}. (v) The task--category mapping (Table~\ref{tab:mapping}) is approximate, and the MoE results apply to the three examined architectures. (vi) The sample is a narrow healthy young-adult cohort. The pairwise-correlation pitfall is a property of the statistical procedure and does not depend on these.
+(i) Family structure is not modelled; HCP-YA siblings and twins may make participants non-independent, which could inflate the H3 evidence. Consistency also depends on head motion, which we controlled for statistically but not by design. (ii) The data were not ICA-FIX denoised, and no motion threshold was applied, although motion was low and balanced across groups. (iii) The efficiency score comes from one session and one of the seven tasks, and that task carries the H3 effect (Sec.~\ref{sec:h3}); its run-to-run reliability is $0.80$. (iv) H4 uses task-profile similarity with seven observations per edge, not time-series FC, and results may differ with Leiden refinement~\cite{traag2019louvain}. (v) The task--category mapping (Table~\ref{tab:mapping}) is approximate, and the MoE results apply to the three examined architectures. (vi) The sample is a narrow healthy young-adult cohort. The pairwise-correlation pitfall is a property of the statistical procedure and does not depend on these.
 
 \section{Conclusion}
 
-In 100 HCP young adults, joint FDR-controlled testing of four routing-level signatures of cognitive efficiency supports one: high-efficiency participants route task information more consistently with one another ($d = +0.52$, $p_{\text{FDR}} = 0.033$), a result that holds under permutation, rank, continuous-score and Bayesian analysis. Sparsity, canonical task-network engagement and modularity are not supported. The conventional pairwise-correlation $t$-test would have reported the consistency effect at $p = 10^{-30}$; subject-level and permutation inference put it at $p \approx 0.01$--$0.02$, and on a flawed first-level model the naive test was just as confident while correct inference was not. Cortex is more concentrated than pooled MoE expert use, but not than every single MoE layer. Routing consistency is a candidate marker of efficient cognition that now needs independent replication with subject-level inference.
+In 100 HCP young adults, joint FDR-controlled testing of four routing-level signatures of cognitive efficiency supports one: high-efficiency participants route task information more consistently with one another ($d = +0.52$, $p_{\text{FDR}} = 0.033$), a result that holds under permutation, rank, continuous-score and Bayesian analysis but is carried by the Working Memory task that also defines efficiency (without it, $d = +0.19$, $p = 0.34$). Sparsity, canonical task-network engagement and modularity are not supported. The conventional pairwise-correlation $t$-test would have reported the consistency effect at $p = 10^{-30}$; subject-level and permutation inference put it at $p \approx 0.01$--$0.02$, and on a flawed first-level model the naive test was just as confident while correct inference was not. Cortex is more concentrated than pooled MoE expert use, but not than every single MoE layer. Routing consistency is at most a candidate marker of efficient cognition; testing it requires an efficiency measure that is independent of the imaged tasks, and subject-level inference.
 
 \section*{Acknowledgment}
 Data were provided by the Human Connectome Project, WU-Minn Consortium (Principal Investigators: David Van Essen and Kamil Ugurbil; 1U54MH091657) funded by the 16 NIH Institutes and Centers that support the NIH Blueprint for Neuroscience Research, and by the McDonnell Center for Systems Neuroscience at Washington University. Claude (Anthropic) was used to assist with analysis code, manuscript revision and language editing; the authors verified all content and take full responsibility for it.

@@ -50,7 +50,7 @@ perm_p = H3R["label_permutation_test"]["p_value"]  # the s03b permutation report
 _m, _e = f"{naive_p:.1e}".split("e")
 naive_txt = rf"$p = {_m}\times10^{{{int(_e)}}}$"
 x = np.linspace(-0.11, 0.11, 1200)
-fig, axes = plt.subplots(3, 1, figsize=(3.45, 3.0), sharex=True)
+fig, axes = plt.subplots(3, 1, figsize=(3.45, 4.0), sharex=True)
 rows = [
     ("Naive pairwise $t$ (1225 + 1225 pairs)", C_NAIVE, G["se_naive"], G["pairwise_diff"],
      naive_txt),
@@ -87,7 +87,7 @@ plt.close(fig)
 I = R["I_matched_gini"]
 moe = R["J_moe"]["models"]
 lw = json.load(open(LAYERWISE))["models"]
-fig, ax = plt.subplots(figsize=(3.45, 2.25))
+fig, ax = plt.subplots(figsize=(7.0, 2.6))
 units = [("8", "Switch-8", 0), ("60", "Qwen-MoE", 1), ("64", "DeepSeek-16B", 2)]
 for k, model, pos in units:
     m = I["subsampled"][k]
@@ -108,7 +108,7 @@ ax.set_xticklabels([f"{m}\n($k$ = {k})" for k, m, _ in units])
 ax.set_xlim(-0.55, 2.55)
 ax.set_ylim(0, 1)
 ax.set_ylabel("Gini coefficient")
-ax.legend(loc="upper left", frameon=False, ncol=1, handletextpad=0.3, borderaxespad=0.1)
+ax.legend(loc="upper left", frameon=False, ncol=3, handletextpad=0.3, borderaxespad=0.1)
 fig.tight_layout()
 fig.savefig(OUT / "fig_cross_domain.pdf", bbox_inches="tight")
 fig.savefig(OUT / "fig_cross_domain.png", dpi=300, bbox_inches="tight")
